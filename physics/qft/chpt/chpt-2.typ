@@ -329,4 +329,163 @@ we don't care.
 \*Complex Scalar Fields
 
 == The Heisenberg Picture
+In the Schrödinger picture we've been working in so far our operators $phi.alt(arrow(x))$ depend on space, while the one-particle states evolve in time by
+$
+  i dv(ket(arrow(p)(t)), t) = H ket(arrow(p)(t)) => ket(arrow(p)(t)) = e^(-i E_arrow(p) t) ket(arrow(p))
+$
+in the Heisenberg picture the time-dependence lies in the operators
+$
+  cal(O)_H = e^(i H t) cal(O)_S e^(- i H t)
+$
+with
+$
+  dv(cal(O)_H, t) = i [H,cal(O)_H]
+$
+in field theory we drop the subscripts and the picture is denoted by either $phi.alt (arrow(x))$ (Schrödinger picture) or $phi.alt(arrow(x), t) = phi.alt(x)$ (Heisenberg picture). The pictures agree at $t = 0$---and the commutation relations become
+$
+  [phi.alt(x),phi.alt(y)] & = [pi (x), pi(y)] = 0 \
+       [phi.alt(x),pi(y)] & = i delta^3 (arrow(x)-arrow(y))
+$
+since the operator $phi.alt(x)$ now depends on time we can consider how it evolves
+$
+  dot(phi.alt) = i [H,phi.alt] &= i/2 [integral dd(y, 3) pi(y)^2+nabla_y phi.alt(y)^2 + m^2 phi.alt(y)^2, phi.alt(x)] \
+  &= i/2 integral dd(y, 3) [pi(y)^2,phi.alt(x)] \
+  &= i/2 integral dd(y, 3) {pi(y) [pi(y),phi.alt(x)]+[pi(y),phi.alt(x)]pi(y)} \
+  &= i/2 integral dd(y, 3) pi(y) {- 2 i delta^3(arrow(x)-arrow(y))} \
+  &= pi(x)
+$
+and for $pi$
+$
+  dot(pi) = i [H,pi] &= i/2 integral dd(y, 3) [pi(y)^2 + nabla_y phi.alt(y)^2+m^2 phi.alt(y)^2 , pi(x)] \
+  &= i/2 integral dd(y, 3) {[nabla_y phi.alt(y)^2,pi(x)] + m^2 [phi.alt(y)^2,pi(x)]} \
+  &= i/2 integral dd(y, 3) {nabla_y phi.alt(y) nabla_y [phi.alt(y),pi(x)]+nabla_y [phi.alt(y),pi(x)] nabla_y phi.alt(y) + 2 i m^2 phi.alt(y) delta^3 (arrow(x)-arrow(y))} \
+  &= - integral dd(y, 3) {nabla delta^3 (arrow(y)-arrow(x)) nabla phi.alt(y) + m^2 phi.alt(y) delta^3 (arrow(x)-arrow(y))} \
+  &=^"i.b.p" nabla^2 phi.alt - m^2 phi.alt
+$
+putting this together with the previous shows that the operator $phi.alt$ satisfies the Klein-Gordon equation
+$
+  partial_mu partial^mu phi.alt + m^2 phi.alt = 0
+$
+we can show
+$
+  e^(i H t) a_arrow(p) e^(- i H t) = e^(- i E_arrow(p) t) a_arrow(p)",  " e^(i H t) a^dagger_arrow(p) e^(- i H t) = e^(i E_arrow(p) t) a_arrow(p)^dagger
+$
+#proof[
+  Consider the first
+  $
+    dv(a_arrow(p) (t), t) = i [H, a_arrow(p)(t)] = - E_arrow(p) a_arrow(p) (t)
+  $
+  which can be solved to give
+  $
+    a_arrow(p) (t) = e^(- i E_arrow(p) t) a_arrow(p)
+  $
+  so
+  $
+    e^(i H t) a_arrow(p) e^(- i H t) = e^(- i E_arrow(p) t) a_arrow(p)
+  $
+  similarly can be done for $a^dagger$.
+]
+this means that the Fourier expansion of $phi.alt(x)$ can be written as
+$
+  phi.alt (x) = integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_arrow(p)) (a_arrow(p) e^(- i p dot x) + a_arrow(p)^dagger e^(i p dot x))
+$
+with $p dot x = E_arrow(p) t - arrow(p) dot arrow(x)$, since $a$ and $a^dagger$ get an additional exponential factor---$phi.alt (x)$ can be shown to satisfy the Klein-Gordon equation. This is a step toward obvious Lorentz invariance, but $phi.alt$ and $pi$ still satisfy
+$
+  [phi.alt (x), pi(y)] = i delta^3 (arrow(x)-arrow(y))
+$
+which tells us nothing about arbitrary spacetime seperations. For our theory to be causal we require that all spacelike separated operators commute
+$
+  [cal(O)_1 (x), cal(O)_2 (y)] = 0
+$
+for all $(x-y)^2 < 0$. This requirement means that a measurement at $x$ can't affect a measurement at $y$ when $x$ and $y$ are not causally connected. We define
+$
+  dd((x-y), d: Delta) = [phi.alt(x),phi.alt(y)]
+$
+this is a simple function given by
+$
+  dd((x-y), d: Delta) = integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) (e^(-i p dot (x-y))- e^(i p dot (x-y)))
+$
+this is Lorentz invariant due to the measure. It is non-vanishing for timelike separations since for e.g. $x-y = vecrow(t, 0)$ giving
+$
+  [phi.alt(arrow(x), 0),phi.alt(arrow(x), t)] tilde e^(- i m t) - e^(i m t)
+$
+it however vanishes for space-like separations. Since $dd((x-y), d: Delta) = 0$ at equal times for all $(x-y)^2 = - (arrow(x)-arrow(y))^2 < 0$. Explicitly take the equal time case
+$
+  [phi.alt (arrow(x),t), phi.alt (arrow(y),t)] = 1/2 integral dd(p, 3)/(2pi)^3 1/sqrt(arrow(p)^2 + m^2) (e^(i arrow(p) dot (arrow(x)-arrow(y)))-e^(- i arrow(p) dot (arrow(x)-arrow(y))))
+$
+$arrow(p)$ is an integration variable so we can flip its sign in the last exponent. Since $dd((x-y), d: Delta)$ is Lorentz invariant it can only depend on $(x-y)^2$ and must therefore vanish for all $(x-y)^2 < 0$---it must vanish in all spacelike frames if it vanishes in one frame.
+
+This is nice since it shows our theory is causal. This holds also for interacting theories, and is commonly posed as an axiom for local quantum field theories. However in the case of free fields the commutator is not an operator.
+
+== Propagators
+We can also ask what the amplitude is to find a particle we've prepared at some point $y$ at some point $x$
+$
+  braket(0, phi.alt(x) phi.alt(y), 0) &= integral dd(p, p', 3)/(2pi)^6 1/sqrt(4 E_arrow(p) E_(arrow(p)')) braket(0, a_arrow(p) a^dagger_(arrow(p)'), 0) e^(-i p dot x + i p' dot y) \
+  &= integral dd(p, 3)/(2 pi)^3 1/(2 E_arrow(p)) e^(- i p dot (x-y)) equiv D(x-y)
+$
+where we call $D(x-y)$ the propagator. For spacelike separations $(x-y)^2 < 0$ it decays like
+$
+  D(x-y) tilde e^(- m abs(arrow(x)-arrow(y)))
+$
+so it decays quickly outside the lightcone, but is non-vanishing---but spacelike measurements commute so what is going on? We can write
+$
+  [phi.alt (x), phi.alt (y)] = D(x-y) - D(y-x) = 0 "if" (x-y)^2 < 0
+$
+when $(x-y)^2 < 0$ there is no Lorentz invariant way to order events. If a particle can travel from $x -> y$ it can also travel from $y-> x$. In any measurement these amplitudes cancel. For a complex scalar field we can look at $[psi(x),psi^dagger (y)]=0$ outside the lightcone. Then the interpretation is that the amplitude for the particle to propagate from $x -> y$ cancels the amplitude for the antiparticle to propagate from $y -> x$. This is also valid for the real scalar field now the antiparticle is just the particle itself.
+
+=== The Feynman Propagator
+We define the Feynman propagator
+$
+  Delta_F (x-y) = braket(0, T phi.alt(x) phi.alt (y), 0)
+  = cases(
+    D(x-y) #h(15pt) & x^0 > y^0,
+    D(y-x) & y^0 > x^0
+  )
+$
+with $T$ standing for time-ordering---we place all operators evaluated at later times to the left
+$
+  T phi.alt (x) phi.alt(y) = cases(
+    phi.alt (x) phi.alt (y) #h(15pt) & x^0 > y^0,
+    phi.alt(y)phi.alt(x) & y^0 > x^0
+  )
+$
+we now claim that the Feynman propagator can be written as
+$
+  Delta_F (x-y) = integral dd(p, 4)/(2pi)^4 i/(p^2-m^2) e^(-i p dot (x-y))
+$
+showing it is explicitly Lorentz invariant---note that this integral is ill-defined since each value of $arrow(p)$ introduces a pole when $p^0 = plus.minus E_arrow(p) = plus.minus sqrt(arrow(p)^2+m^2)$. We choose the contour we integrate over to go below the $- E_arrow(p)$ pole with a semicircular arc, and similarly go above the $+E_arrow(p)$ pole with a semicircular arc.
+
+#proof[
+  $
+    1/(p^2 - m^2) = 1/((p^0 - E_arrow(p))(p^0 + E_arrow(p)))
+  $
+  so the residue of the pole at $plus.minus E_arrow(p)$ is $plus.minus E_arrow(p)\/2$. For $x^0 > y^0$ we close the contour in the lower half plane, where $p^0 -> - i oo$ with the integrand vanishing since $e^(- i p^0 (x^0-y^0)) -> 0$. The integral over $p^0$ then picks up the residue at $plus E_arrow(p)$ giving $- pi i\/E_arrow(p)$ (minus because clockwise). So we obtain for $x^0 > y^0$
+  $
+    Delta_F (x-y) &= integral dd(p, 3)/(2pi)^4 (-2pi i)/(2 E_arrow(p)) i e^(-i E_arrow(p) (x^0-y^0) + i arrow(p) dot (arrow(x)-arrow(y))) \
+    &= integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) e^(- i p dot (x-y)) = D(x-y)
+  $
+  which is the Feynman propagator for $x^0 > y^0$. For $y^0 > x^0$ we close the contour anti-clockwise in the upper half plane giving
+  $
+    Delta_F (x-y) &= integral dd(p, 3)/(2pi)^4 (2 pi i)/(-2 E_arrow(p)) i e^(i E_arrow(p) (x^0-y^0) + i arrow(p) dot (arrow(x)-arrow(y))) \
+    &= integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) e^(-i E_arrow(p) (y^0 - x^0) - i arrow(p) dot (arrow(y)-arrow(x))) \
+    &= integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) e^(- i p dot (y-x)) = D(y-x)
+  $
+  which is the Feynman propagator for $y^0 > x^0$.
+]
+Instead of doing this it is typically written as
+$
+  Delta_F (x-y) = integral dd(p, 4)/(2pi)^4 (i e^(-i p dot(x-y)))/(p^2 - m^2 + i epsilon)
+$
+with $epsilon > 0$ and infinitesimal---this shifts the poles slightly off axis so we can integrate along the real axis for $p^0$---this is called the $i epsilon$-prescription.
+
+=== Green's Functions
+The Feynman propagator is a Green's function for the Klein-Gordon equation---away from singularities we have
+$
+  (partial_t^2 - nabla^2 + m^2) Delta_F (x-y) &= integral dd(p, 4)/(2pi)^4 i/(p^2-m^2) (-p^2 + m^2) e^(-i p dot (x-y)) \
+  &= - i integral dd(p, 4)/(2pi)^4 e^(-i p dot (x-y)) \
+  &= - i delta^4 (x-y)
+$
+one can also defined the retarded and advanced Green's functions using other contours.
+
+== Non-Relativistic Fields
 $dots$
