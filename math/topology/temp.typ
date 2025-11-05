@@ -98,7 +98,7 @@
 #let def = thmbox(
   "def",
   "Definition",
-  fill: rgb(green),
+  //fill: rgb(green),
   stroke: rgb(black) + 0pt,
   padding: (top: 0em, bottom: 0em),
 )
@@ -115,7 +115,7 @@
   "thm",
   "Theorem",
   base_level: 0,
-  fill: rgb(red),
+  //fill: rgb(red),
   stroke: rgb(black) + 0pt,
   padding: (top: 0.0em, bottom: 0.0em),
 )
@@ -124,7 +124,7 @@
   "thm",
   "Lemma",
   base_level: 0,
-  fill: rgb(yellow),
+  //fill: rgb(yellow),
   stroke: rgb(black) + 0pt,
   padding: (top: 0.0em, bottom: 0.0em),
 )
@@ -133,7 +133,7 @@
   "prop",
   "Proposition",
   base_level: 0,
-  fill: rgb(orange),
+  //fill: rgb(orange),
   stroke: rgb(black) + 0pt,
   padding: (top: 0.0em, bottom: 0.0em),
 )
@@ -142,7 +142,7 @@
   "corollary",
   "Corollary",
   base_level: 0,
-  fill: rgb(pink),
+  //fill: rgb(pink),
   stroke: rgb(black) + 0pt,
   padding: (top: 0.0em, bottom: 0.0em),
 )

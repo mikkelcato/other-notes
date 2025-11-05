@@ -1,491 +1,515 @@
 //**** init-ting
 #import "@preview/physica:0.9.5": *
 #import "chpt-temp.typ": *
+#import "@preview/mannot:0.3.0": *
 
 #show: thmrules.with(qed-symbol: $square$)
 #show: chpt-note.with()
 
-= Free Fields
-== Canonical Quantization
-Canonical quantization is the procedure to go from the Hamiltonian formalism of classical dynamics to the quantum theory. The idea is to take our generalized coordinates $q_a$ and the conjugate momenta $p^a$ and promote them to operators---with Poisson brackets becoming commutators---so
+= The free scalar field
+== Quantization à la Schrödinger
+In classical mechanics the momentum conjugate to $q_i (t)$ is
 $
-  [q_a,q_b] & = [p^a,p^b] = 0 \
-  [q_a,p^b] & = i delta_a^b
+  p_i (t) = pdv(L, dot(q)_i (t))
 $
-in field theory we do the same, now we just promote the fields $phi.alt_a (arrow(x))$ and its momentum conjugate $pi^b (arrow(x))$---so a quantum field is an operator valued function obeying
+and the Hamiltonian is the Legendre transform of the Lagrangian
 $
-  [phi.alt_a (arrow(x)),phi.alt_b (arrow(y))] &= [pi^a (arrow(x)), pi^b (arrow(y))] = 0\
-  [phi.alt_a (arrow(x)), pi^b (arrow(y))] &= i delta^(3) (arrow(x)-arrow(y)) delta_a^b
+  H = sum_i p_i (t) dot(q)_i (t) - L
 $
-note that we are working in the Schrödinger picture---so all time-dependence lies in $ket(psi)$ with the operators $phi.alt_a (arrow(x))$ and $pi^a (arrow(x))$ being time-independent. The state evolve by the usual
+to quantize in the Schrödinger picture we promote $q_i$ and $p_i$ to self-adjoint operators without time-dependence such that the fundamental commutation relation
 $
-  i dv(ket(psi), t) = H ket(psi)
+  [q_i, p_j] = i delta_(i j)
 $
-so this is the exact same formalism as usual just with fields---as usual we'd like the spectrum of the Hamiltonian $H$. This is rough since we have infinite degrees of freedom.
+holds.
 
-For free theories however we can do dynamics such that each degree of freedom evolves independently---these typically have Lagrangians which are quadratic in the fields $->$ linear equations of motion. The simplest relativistic free theory is the classical Klein-Gordon equation
+In field theory we mimick this by defining the momentum $pi^a (x)$ conjugate to $phi.alt_a (x)$
+as
 $
-  partial_mu partial^mu phi.alt + m^2 phi.alt = 0
+  pi^a (x) = pdv(cal(L), dot(phi.alt)_a)
 $
-the degrees of freedom decouple if we take the Fourier transform
+The Hamiltonian is then
 $
-  phi.alt (arrow(x),t) = integral dd(p, 3)/(2pi)^3 e^(i arrow(p) dot arrow(x)) phi.alt (arrow(p),t)
+  H = integral dd(x, 3) cal(H) = integral dd(x, 3) (pi(x) dot(phi.alt)(x)-cal(L))
 $
-then
+with the Hamiltonian density being
 $
-  0 &= square phi.alt + m^2 phi.alt \
-  0 &= (pdv(, t, 2)- nabla^2 ) phi.alt + m^2 phi.alt \
-  0 &= (pdv(, t, 2)- nabla^2 + m^2) integral dd(p, 3)/(2 pi)^3 e^(i arrow(p)dot arrow(x)) phi.alt(arrow(p), t) \
-  0 &= integral dd(p, 3)/(2pi)^3 e^(i arrow(p) dot arrow(x)) [pdv(, t, 2) phi.alt + m^2 phi.alt - (i arrow(p))^2 phi.alt] \
-  &=> [pdv(, t, 2) + (arrow(p)^2 + m^2)] phi.alt (arrow(p),t) = 0
+  cal(H) = pi^a (x) dot(phi.alt)_a (x) - cal(L) (x)
 $
-this is just the equation for a harmonic oscillator with frequency
+For the scalar field action we find $pi(x) = dot(phi.alt)(x)$ so
 $
-  w_arrow(p) = + sqrt(arrow(p)^2+m^2)
+  H &= integral dd(x, 3) (dot(phi.alt)^2 (x) - 1/2 partial_mu phi.alt partial^mu phi.alt + 1/2 m^2 phi.alt^2 (x)) \
+  &= integral dd(x, 3) (1/2 dot(phi.alt)^2 (x) + 1/2 (grad phi.alt (x))^2 + 1/2 m^2 phi.alt^2 (x)) \
+  &= integral dd(x, 3) (1/2 pi^2 (x) + 1/2 (grad phi.alt)^2 + 1/2 m^2 phi.alt^2 (x))
 $
-so the general solution to the Klein-Gordon equation is a linear superposition of simple harmonic oscillators vibrating at different frequencies and amplitudes. To quantize this guy we just need to quantize this infinite number of harmonic oscillators.
+now we quantize in the Schrödinger picutre by dropping the time-dependence of $phi.alt$ and $pi$ and promoting them to operators $phi.alt^((s)) (bold(x))$ and $pi^((s)) (bold(x))$. For real scalar fields they are self-adjoint with canonical commutation relations
+$
+  markrect([phi.alt (bold(x)),pi (bold(y))] = i delta^((3)) (bold(x)-bold(y))",  " [phi.alt(bold(x)),phi.alt(bold(y))] = 0 = [pi(bold(x)),pi(bold(y))], outset: #.3em)
+$
+this approach to quantum field theory is called canonical quantization.
 
-=== The Simple Harmonic Oscillator
-The quantum Hamiltonian is
+== The Fourier expansion
+We Fourier transform our fields as
 $
-  H = 1/2 p^2 + 1/2 omega^2 q^2
+  phi.alt (bold(x)) &= integral dd(p, 3)/(2pi)^3 tilde(phi.alt)(bold(p)) e^(i bold(p) dot bold(x)) \
+  pi (bold(x)) &= integral dd(p, 3)/(2pi)^3 tilde(pi) (bold(p)) e^(i bold(p) dot bold(x))
 $
-with $[q,p] = i$. We define the creation and annihilation operators
+with $tilde(phi.alt)^dagger (bold(p)) = tilde(phi.alt) (- bold(p))$ to ensure $phi.alt(bold(x))$ is self-adjoint---we plug these into our Hamiltonian. Using
 $
-  a = sqrt(omega/2) q + i/sqrt(2 omega) p",  " a^dagger = sqrt(omega/2) q - i/sqrt(2 omega) p
+  integral dd(x, 3) e^(i (bold(p)+bold(q)) dot bold(x)) = (2 pi)^3 delta^((3)) (bold(p) + bold(q))
 $
-or inverting
+eventually yields
 $
-  q = 1/sqrt(2 omega) (a + a^dagger)",  " p = -i sqrt(omega/2) (a - a^dagger)
+  markrect(H = integral dd(p, 3)/(2 pi)^3 (1/2 abs(tilde(pi)(bold(p)))^2 + 1/2 omega_p^2 abs(tilde(phi.alt)(bold(p)))^2), outset: #.3em)
 $
-we can find $[a,a^dagger] = 1$ and
-$
-  H = omega (a^dagger a + 1/2)
-$
-with $[H,a^dagger] = omega a^dagger$ and $[H,a] = - omega a$. Let $ket(E)$ be an eigenstate with energy $E$ then
-$
-  H a^dagger ket(E) = (E+ omega) a^dagger ket(E)",  " H a ket(E) = (E-omega)a ket(E)
-$
-so we get a ladder of states with energies $dots, E - omega, E, E + omega, dots$. If the energy is bounded below then we have some $ket(0)$ with $a ket(0) = 0$ and ground state energy---zero point energy---given by
-$
-  H ket(0) = 1/2 omega ket(0)
-$
-the excited states are then obtained by repetition of $a^dagger$
-$
-  ket(n) = (a^dagger)^n ket(0)",  " H ket(n) = (n+1/2) omega ket(n)
-$
-ignoring normalization of $ket(n)$.
+where $omega_p = sqrt(bold(p)^2 + m^2)$. This is a collection of decoupled harmonic oscillators of frequency $omega_p$!---and the Hamiltonian has become diagonal which is helpful.
 
-== The Free Scalar Field
-We apply the quantization of the harmonic oscillator the the free scalar field---we write $phi.alt$ and $pi$ as a sum of an infinite number of creation and annihilation operators $a^dagger_arrow(p)$ and $a_arrow(p)$
+To solve the oscillators we follow the quantum mechanical treatment of the Hamiltonian
 $
-  phi.alt (arrow(x)) &= integral dd(p, 3)/(2pi)^3 1/sqrt(2 omega_arrow(p)) [a_arrow(p) e^(i arrow(p) dot arrow(x))+a^dagger_arrow(p) e^(- i arrow(p) dot arrow(x))] \
-  pi (arrow(x)) &=integral dd(p, 3)/(2pi)^3 (-i) sqrt(omega_arrow(p)/2) [a_arrow(p) e^(i arrow(p) dot arrow(x))-a^dagger_arrow(p) e^(- i arrow(p) dot arrow(x))]
+  H = 1/2 pi^2 + omega^2 q^2
 $
-so each momentum mode of the field is a simple harmonic oscillator. We claim that
+where we define ladder operators $a$ and $a^dagger$ such that
 $
-  [phi.alt (arrow(x)), phi.alt (arrow(y))] = [pi (arrow(x)),pi(arrow(y))] &= 0",  " [phi.alt (arrow(x)),pi (arrow(y))] = i delta^3 (arrow(x)-arrow(y)) \
-  <=> [a_arrow(p),a_arrow(q)] = [a^dagger_arrow(p),a^dagger_arrow(q)] &= 0",  " [a_arrow(p),a^dagger_arrow(q)] = (2pi)^3 delta^3 (arrow(p)-arrow(q))
+  q = 1/sqrt(2 omega) (a + a^dagger)";  " pi = - sqrt(omega/2) i (a- a^dagger)
 $
-
-#proof[
-  Assume $[a_arrow(p),a^dagger_arrow(q)] = (2pi)^3 delta^3 (arrow(p)-arrow(q))$.
-  $
-    [phi.alt (arrow(x)),pi (arrow(y))] &= integral (dd(p, 3) dd(q, 3))/(2 pi)^6 (-i)/2 sqrt(omega_arrow(q)/omega_arrow(p)) {- [a_arrow(p),a^dagger_arrow(q)] e^(i arrow(p) dot arrow(x) - i arrow(q) dot arrow(y))+[a^dagger_arrow(p),a_arrow(q)] e^(- i arrow(p) dot arrow(x) + i arrow(q) dot arrow(y))} \
-    &=^(integral dd(q, 3)) integral dd(p, 3)/(2pi)^3 (-i)/2 (-e^(i arrow(p) dot (arrow(x)-arrow(y)))-e^(i arrow(p) dot (arrow(y)-arrow(x)))) \
-    &= i delta^3 (arrow(x)-arrow(y))
-  $
-  for the other direction we need to invert $phi.alt (arrow(x))$ and $pi (arrow(x))$ this is basically just an inverse Fourier transform take
-  $
-    integral dd(x, 3) phi.alt (arrow(x)) e^(-i arrow(p) dot arrow(x)) &= integral dd(x, 3) e^(- i arrow(p) dot arrow(x)) integral dd(q, 3)/(2pi)^3 1/sqrt(2 omega_arrow(q)) [a_arrow(q) e^(i arrow(q) dot arrow(x)) + a^dagger_arrow(q) e^(-i arrow(q) dot arrow(x))] \
-    &= integral dd(q, 3) 1/sqrt(2 omega_arrow(q)) [a_arrow(q) ( delta^3 (arrow(q)-arrow(p)) + a^dagger_arrow(q) delta^3 (arrow(q)+arrow(p))] \
-    &= 1/sqrt(2 omega_arrow(p)) a_arrow(p) + 1/sqrt(2 omega_(- arrow(p))) a^dagger_(-arrow(p)) \
-    &= 1/sqrt(2 omega_arrow(p)) (a_arrow(p) + a^dagger_(-arrow(p))) \
-    sqrt(2 omega_arrow(p)) integral dd(x, 3) e^(-i arrow(p) dot arrow(x)) phi.alt (arrow(x)) &= a_arrow(p) + a^dagger_(-arrow(p))
-  $
-  similarly
-  $
-    integral dd(x, 3) e^(-i arrow(p) dot arrow(x)) pi(arrow(x)) &= i sqrt(omega_arrow(p)/2) (- a_arrow(p) + a^dagger_(-arrow(p))) \
-    i sqrt(2/omega_arrow(p)) integral dd(x, 3) e^(-i arrow(p) dot arrow(x)) pi(arrow(x)) &= a_arrow(p) - a^dagger_(-arrow(p))
-  $
-  so we find
-  $
-    a_arrow(p) &= 1/2 integral dd(x, 3) sqrt(2 omega_arrow(p)) e^(-i arrow(p) dot arrow(x)) phi.alt (arrow(x)) + i sqrt(2/omega_arrow(p)) e^(-i arrow(p) dot arrow(x)) pi(arrow(x)) \
-    &= 1/sqrt(2 omega_arrow(p)) integral dd(x, 3) e^(- i arrow(p) dot arrow(x)) (omega_arrow(p) phi.alt(arrow(x))+i pi(arrow(x)))
-  $
-  and
-  $
-    a^dagger_arrow(p) = 1/sqrt(2 omega_arrow(p)) integral dd(x, 3) e^(i arrow(p) dot arrow(x)) (omega_arrow(p) phi.alt(arrow(x)) - i pi(arrow(x)))
-  $
-  now
-  $
-    [a_arrow(p),a^dagger_arrow(q)] &= 1/(2 sqrt(omega_arrow(p) omega_arrow(q))) integral dd(x, y, 3) e^(- i arrow(p) dot arrow(x) + arrow(q) dot arrow(y)) [(omega_arrow(p) phi.alt(arrow(x)) + i pi(arrow(x))),(omega_arrow(q) phi.alt(arrow(y))-i pi (arrow(y)))] \
-    &= 1/(2 sqrt(omega_arrow(p) omega_arrow(q))) integral dd(x, y, 3) e^(i arrow(q) dot arrow(y) -i arrow(p) dot arrow(x) ) {- i omega_arrow(p) [phi.alt(arrow(x)),pi(arrow(y)))] + i omega_arrow(q) [pi(arrow(x)),phi.alt(arrow(y))] } \
-    &= 1/(2 sqrt(omega_arrow(p) omega_arrow(q))) integral dd(x, y, 3) e^(i arrow(q) dot arrow(y) -i arrow(p) dot arrow(x) ) { omega_arrow(p) delta^3 (arrow(x)-arrow(y)) + omega_arrow(q) delta^3(arrow(y)-arrow(x)) } \
-    &= 1/(2 sqrt(omega_arrow(p) omega_arrow(q))) integral dd(x, 3) e^(i (arrow(q)-arrow(p)) dot arrow(x)) (omega_arrow(p) + omega_arrow(q)) \
-    &= 1/(2 sqrt(omega_arrow(p) omega_arrow(q))) (omega_arrow(p)+omega_arrow(q)) (2 pi)^3 delta^3 (arrow(q)-arrow(p)) \
-    &= (2 pi)^3 delta^3 (arrow(p)-arrow(q))
-  $
-  this is a bit loose but it works.
-]
-
-We can also find the Hamiltonian
+with $[a,a^dagger] = 1$. We generalize these using $tilde(phi.alt)(bold(p)) = tilde(phi.alt)^dagger (-bold(p))$ and $tilde(pi)(bold(p)) = tilde(pi)^dagger (- bold(p))$ to define
 $
-  H &= 1/2 integral dd(x, 3) pi^2 + (grad phi.alt)^2 + m^2 phi.alt^2 \
-  &= 1/2 integral (dd(x, p, q, 3))/(2pi)^6 [- sqrt(omega_arrow(p) omega_arrow(q))/2 (a_arrow(p) e^(i arrow(p) dot arrow(x))-a^dagger_arrow(p) e^(- i arrow(p) dot arrow(x)))(a_arrow(q) e^(i arrow(q) dot arrow(x))-a^dagger_arrow(q) e^(- i arrow(q) dot arrow(x))) \
-    &+ 1/(2 sqrt(omega_arrow(p) omega_arrow(q))) (i arrow(p) a_arrow(p) e^(i arrow(p) dot arrow(x))-i arrow(p) a^dagger_arrow(p) e^(- i arrow(p) dot arrow(x)))(i arrow(q) a_arrow(q) e^(i arrow(q) dot arrow(x))-i arrow(q) a^dagger_arrow(q) e^(- i arrow(q) dot arrow(x))) \
-    &+ m^2/(2 sqrt(omega_arrow(p) omega_arrow(q)))( a_arrow(p)e^(i arrow(p) dot arrow(x))+a^dagger_arrow(p) e^(- i arrow(p) dot arrow(x)) )(a_arrow(q) e^(i arrow(q) dot arrow(x))+a^dagger_arrow(q) e^(- i arrow(q) dot arrow(x)) )] \
-  &=^(integral dd(x, q, 3)) 1/4 integral dd(p, 3)/(2 pi)^3 1/omega_arrow(p) [(-omega_arrow(p)^2 + arrow(p)^2 + m^2)(a_arrow(p) a_(-arrow(p)) + a^dagger_arrow(p) a^dagger_(-arrow(p)))+(omega_arrow(p)^2 + arrow(p)^2 + m^2)(a_arrow(p)a^dagger_arrow(p) + a^dagger_arrow(p) a_arrow(p))]
+  a(bold(p)) &= 1/2 (sqrt(2 omega_p) tilde(phi.alt)(bold(p))+i sqrt(2/omega_p) tilde(pi) (bold(p)) ) \
+  a^dagger (bold(p)) &= 1/2 (sqrt(2 omega_p) tilde(phi.alt) (- bold(p))-i sqrt(2/omega_p) tilde(pi) (- bold(p)))
 $
-this is a mess, however since $omega_arrow(p)^2 = arrow(p)^2+m^2$ the first term vanishes and we obtain
+we can solve for $tilde(phi.alt) (bold(p))$ and $tilde(pi)(bold(p))$
 $
-  H &= 1/2 integral dd(p, 3)/(2pi)^3 omega_arrow(p) [a_arrow(p) a^dagger_arrow(p) + a^dagger_arrow(p) a_arrow(p)] \
-  &= integral dd(p, 3)/(2pi)^3 omega_arrow(p) [a^dagger_arrow(p) a_arrow(p) + 1/2 (2 pi)^3 delta^3 (0)]
+  tilde(phi.alt) (bold(p)) &= 1/sqrt(2 omega_p) (a(bold(p)) + a^dagger (-bold(p))) \
+  tilde(pi) (bold(p)) &= - sqrt(omega_p/2)i ( a(bold(p))-a^dagger (- bold(p)))
 $
-where we add and subtract $a^dagger_arrow(p) a_arrow(p)$ two get the equality---this result is weird since our Hamiltonian apparently has an infinite spike at $0$.
-
-== Vacuum
-We define vacuum $ket(0)$ by requiring that it is annihilated by all $a_arrow(p)$
+using these it follows that
 $
-  a_arrow(p) ket(0) = 0 "for all" arrow(p)
-$
-with this the energy of the ground state comes from the second term of the Hamiltonian
-$
-  H ket(0) equiv E_0 ket(0) = (integral dd(p, 3) 1/2 omega_arrow(p) delta^3 (0)) ket(0) = oo ket(0)
-$
-infinities pop up all over the place in quantum field theory.  In this expression we have an infinity due to space being infinite---infra-red divergence---to solve this problem we put our theory inside a box of length $L$ and impose periodic boundaries. Then
-$
-  (2pi)^3 delta^3 (0) = lim_(L -> oo) integral_(-L\/2)^(L\/2) dd(x, 3) evaluated(e^(i arrow(x) dot arrow(p)))_(arrow(p)=0) = lim_(L -> oo) integral_(-L\/2)^(L\/2) dd(x, 3) = V
-$
-so $delta(0)$ is a problem because we are calculating total energy, we could instead calculate energy density
-$
-  cal(E)_0 = E_0/V = integral dd(p, 3)/(2 pi)^3 1/2 omega_arrow(p)
-$
-but this is still infinite, since $cal(E)_0 -> oo$ when $abs(arrow(p)) -> oo$ in the limit---ultra-violet divergence (short distance). This happens since we assume our theory is valid for arbitrary scales.
-
-A simpler way to deal with the infinity is by redefining our Hamiltonian by subtracting it off---since we just care about energy differences anyway
-$
-  H = integral dd(p, 3)/(2pi)^3 omega_arrow(p) a^dagger_arrow(p) a_arrow(p)
-$
-so we remove the zero-point energy---and now $H ket(0) = 0$. In fact the difference between our two Hamiltonians is ordering ambiguity---we could have defined $ H = 1/2 (omega q - i p)(omega q + i p) $
-which would be the same classically, and upon quantization we'd find $H = omega a^dagger a$. This method is called normal ordering, written as
-$
-  : phi.alt_1 (arrow(x)_1) dots phi.alt_n (arrow(x)_n) :
-$
-where it is defined as the usual product but with all annihilation operators $a_arrow(p)$ placed to the right so $:a a^dagger: = a^dagger a$ this makes
-$
-  :H: = integral dd(p, 3)/(2 pi)^3 omega_arrow(p) a^dagger_arrow(p) a_arrow(p)
-$
-\*Casimir force.
-
-== Particles
-We can now handle excitations of the field. We start by showing
-$
-  [H,a^dagger_arrow(p)] = omega_arrow(p) a^dagger_arrow(p)",  " [H,a_arrow(p)] = - omega_arrow(p) a_arrow(p)
-$
-#proof[
-  The first
-  $
-    [H, a_arrow(q)^dagger] &= integral dd(p, 3)/(2 pi)^3 omega_arrow(p) [a_arrow(p)^dagger a_arrow(p),a^dagger_arrow(q)] \
-    &= integral dd(p, 3)/(2pi)^3 omega_arrow(p) a^dagger_arrow(p) [a_arrow(p),a^dagger_arrow(q)] \
-    &= omega_arrow(q) a^dagger_arrow(q)
-  $
-  the second
-  $
-    [H, a_arrow(q)] &= integral dd(p, 3)/(2 pi)^3 omega_arrow(p) [a_arrow(p)^dagger a_arrow(p),a_arrow(q)] \
-    &= integral dd(p, 3)/(2pi)^3 omega_arrow(p) a_arrow(p) [a_arrow(p)^dagger,a_arrow(q)] \
-    &= -omega_arrow(q) a_arrow(q)
-  $
-]
-so similarly to the harmonic oscillator we can construct energy eigenstates by acting on $ket(0)$ with $a^dagger_arrow(p)$
-$
-  ket(arrow(p)) = a^dagger_arrow(p) ket(0)
-$
-this state has energy
-$
-  H ket(arrow(p)) = omega_arrow(p) ket(arrow(p))",  " omega_arrow(p)^2 = arrow(p)^2 + m^2
-$
-#proof[
-  $
-    H ket(arrow(p)) &= integral dd(q, 3)/(2pi)^3 omega_arrow(q) a^dagger_arrow(q) a_arrow(q) a^dagger_arrow(p) ket(0) \
-    &= integral dd(q, 3)/(2pi)^3 omega_arrow(q) a^dagger_arrow(q) {[a_arrow(q),a^dagger_arrow(p)]+a^dagger_arrow(p) a_arrow(q)}ket(0) \
-    &=^(a_arrow(q) ket(0) = 0) integral dd(q, 3)/(2pi)^3 omega_arrow(q) a_arrow(q)^dagger (2pi)^3 delta^3 (arrow(q)-arrow(p)) ket(0) \
-    &= omega_arrow(p) a^dagger_arrow(p) ket(0) = omega_arrow(p) ket(arrow(p))
-  $
-]
-and we recognize the relativistic dispersion relation for a particle of mass $m$ with momentum $arrow(p)$
-$
-  E_arrow(p)^2 = arrow(p)^2 + m^2
-$
-so we interpret $ket(arrow(p))$ as the momentum eigenstate of a single particle of mass $m$---further we'll write $E_arrow(p)$ instead of $omega_arrow(p)$ from now on.
-
-We can consider other operators, e.g. the classical momentum $arrow(P)$ which after normal ordering can be written as
-$
-  arrow(P) = - integral dd(x, 3) pi grad phi.alt = integral dd(p, 3)/(2 pi)^3 arrow(p) a^dagger_arrow(p) a_arrow(p)
-$
-this form is similar to the Hamiltonian so it is obvious that
-$
-  arrow(P) ket(arrow(p)) = arrow(p) ket(arrow(p))
-$
-as we'd expect. We can also look at the angular momentum
-$
-  J^i = epsilon^(i j k) integral dd(x, 3) (cal(J)^0)^(j k)
-$
-one can show that $J^i ket(arrow(p)=0) = 0$---so the particle has no internal angular momentum, i.e. quantizing a scalar field gives rise to a spin 0 particle.
-
-By acting with multiple $a^dagger$ we can create multi-particle states---we say the state where $n$ $a^dagger$ act on the vacuum as an $n$-particle state
-$
-  ket(arrow(p)_1","dots","arrow(p)_n) = a^dagger_(arrow(p)_1) dots a^dagger_(arrow(p)_n) ket(0)
-$
-all $a^dagger$ commute with themselves, so this state is fully symmetric under exchange meaning the particles are bosons. The full Hilbert space---the Fock space---is spanned by acting on vacuum with all possible combinations of $a^dagger$
-$
-  ket(0)",  " a_arrow(p)^dagger ket(0)",  " a^dagger_arrow(p) a^dagger_arrow(q) ket(0) dots
-$
-this space is just the sum of the $n$-particle Hilbert spaces. The number operator $N$ counts the number of particles in a given state in the Fock space
-$
-  N = integral dd(p, 3)/(2pi)^3 a^dagger_(arrow(p)) a_arrow(p)
-$
-it satisfies $N ket(arrow(p)_1"," dots"," arrow(p)_n) = n ket(arrow(p)_1"," dots"," arrow(p)_n)$. This is because
-$
-  a^dagger_arrow(p) a_arrow(p) ket(arrow(p)_1","dots","arrow(p)_n) = sum_(j=1)^n (2pi)^3 delta^3 (arrow(p)-arrow(p)_j) ket(arrow(p)_1","dots","arrow(p)_n)
-$
-then the integral would just return the sum giving $n$. It also commutes with the Hamiltonian $[N,H]=0$ so particle number is conserved---this is a property of free theories since interactions are what destroy or create particles.
-
-Similarly to quantum mechanics the states $ket(arrow(p))$ are bad since we can't normalize them---we have
-$
-  braket(0, a_arrow(p) a_arrow(p)^dagger, 0) &= braket(arrow(p)) = (2pi)^3 delta(0) \
-  braket(0, phi.alt(arrow(x)) phi.alt (arrow(x)), 0) &= braket(arrow(x)) = delta(0)
-$
-so the operators $a_arrow(p)$ and $phi(arrow(x))$ are not good operators---$braket(arrow(p))$ becomes a operator valued distribution. We can construct well-defined operators by smearing the distributions---e.g. using a wavepacket
-$
-  ket(phi) = integral dd(p, 3)/(2pi)^3 e^(-i arrow(p) dot arrow(x)) phi(arrow(p)) ket(arrow(p))
-$
-a typical state could be described by a Gaussian
-$
-  phi(arrow(p)) = exp[-(arrow(p)^2)/(2 m^2)]
+  & markrect(
+      phi.alt (bold(x)) = integral dd(p, 3)/(2pi)^3 1/sqrt(2 omega_p) (a(bold(p)) e^(i bold(p)dot bold(x))+a^dagger (bold(p)) e^(- i bold(p) dot bold(x))), outset: #.3em
+    ) \
+  \
+  & markrect(
+      pi(bold(x)) = integral dd(p, 3)/(2pi)^3 (-i) sqrt(omega_p/2) (a(bold(p))e^(i bold(p)dot bold(x))-a^dagger (bold(p))e^(- i bold(p) dot bold(x)))
+      , outset: #.3em,
+    )
 $
 
-=== Relativistic Normalization
-We normalize $braket(0) = 1$. Then $ket(arrow(p)) = a^dagger_arrow(p) ket(0)$ satisfies
+the main trick used is relabeling $bold(p) -> -bold(p)$ under which $omega_p = omega_(-p)$ and $dd(p, 3) = dd((-p), 3)$. We can also find the commutation relations (from the Fourier expansions)
 $
-  braket(arrow(p), arrow(q)) = (2pi)^3 delta^3 (arrow(p)-arrow(q))
-$
-#proof[
-  $
-    braket(arrow(p), arrow(q)) & = braket(0, a_arrow(p) a^dagger_arrow(q), 0) \
-                               & = braket(0, [a_arrow(p),a^dagger_arrow(q)], 0) \
-                               & = (2pi)^3 delta^3(arrow(p)-arrow(q)) braket(0) \
-                               & = (2pi)^3 delta^3(arrow(p)-arrow(q))
-  $
-]
-we'd like to know if this is Lorentz invariant. We know the identity operator is Lorentz invariant
-$
-  1 = integral dd(p, 3)/(2pi)^3 ketbra(arrow(p))
-$
-however neither part is Lorentz invariant by itself. We claim that
-$
-  integral dd(p, 3)/(2 E_arrow(p))
-$
-is invariant.
-
-#proof[
-  $integral dd(p, 4)$ is Lorentz invariant, and so is
-  $
-    p_mu p^mu = m^2 => p_0^2 = E_arrow(p)^2 = arrow(p)^2 + m^2
-  $
-  both branches of $p_0 = plus.minus E_arrow(p)$ are also invariant. So
-  $
-    evaluated(integral dd(p, 4) dd((p_0^2-arrow(p)^2-m^2), d: delta))_(p_0 > 0) = integral dd(p, 3)/(2 p_0) = integral dd(p, 3)/(2 E_arrow(p))
-  $
-  is Lorentz invariant---note we use
-  $
-    delta (p_0^2 - E^2_arrow(p)) = 1/(2 E_arrow(p)) (delta(p_0 - E_arrow(p))+delta(p_0 + E_arrow(p)))
-  $
-  to do the $integral dd(p_0)$ only picking the positive energies.
-]
-
-From this we find the Lorentz invariant $delta$-function
-$
-  2 E_arrow(p) delta^3 (arrow(p)-arrow(q)) => integral dots = 1
-$
-so the relativistically normalized momentum states are given by
-$
-  ket(p) = sqrt(2 E_arrow(p)) ket(arrow(p)) = sqrt(2 E_arrow(p)) a^dagger_arrow(p) ket(0)
-$
-now
-$
-  braket(p, q) = (2 pi)^3 2 E_arrow(p) delta^3 (arrow(p)-arrow(q))
+  [tilde(phi.alt) (bold(p)),tilde(pi) (bold(q))] = integral dd(x, y, 3) e^(- bold(p)dot bold(x)) e^(- i bold(q) dot bold(y)) underbrace([phi.alt (bold(x)),pi(bold(y))], = i delta^((3)) (bold(x)-bold(y))) = (2pi)^3 i delta^((3)) (bold(p) + bold(q))
 $
 and
 $
-  1 = integral dd(p, 3)/(2 pi)^3 1/(2 E_arrow(p)) ketbra(p)
+  [tilde(phi.alt) (bold(p)), tilde(phi.alt)(bold(q))] = 0 = [tilde(pi) (bold(p)), tilde(pi)(bold(q))]
 $
-some places define
+it follows that the ladder operators obey the commutation relations
 $
-  a^dagger (p) = sqrt(2 E_arrow(p)) a_arrow(p)^dagger
+  markrect([a(bold(p)),a^dagger (bold(q))] = (2 pi)^3 delta^((3)) (bold(p)-bold(q))";  " [a^dagger (bold(p)),a^dagger (bold(q))] = 0 = [a(bold(p)),a(bold(q))], outset: #.3em)
 $
-we don't care.
-
-\*Complex Scalar Fields
-
-== The Heisenberg Picture
-In the Schrödinger picture we've been working in so far our operators $phi.alt(arrow(x))$ depend on space, while the one-particle states evolve in time by
+The Hamiltonian can be written as
 $
-  i dv(ket(arrow(p)(t)), t) = H ket(arrow(p)(t)) => ket(arrow(p)(t)) = e^(-i E_arrow(p) t) ket(arrow(p))
+  H &= integral dd(p, 3)/(2 pi)^3 [1/2 (i sqrt(omega_p/2))^2 (a(bold(p))-a^dagger (- bold(p)))(a(-bold(p))-a^dagger (bold(p))) \
+    &#h(1em)+ omega_p^2/2 1/(2 omega_p) (a(bold(p))+a^dagger (-bold(p)))(a(-bold(p))+a^dagger (bold(p)))] \
+  &=^"cross terms survive" integral dd(p, 3)/(2 pi)^3 omega_p/2 [a(bold(p))a^dagger (bold(p))+a^dagger (-bold(p))a(- bold(p))] \
+  &=^([a(bold(p)),a^dagger (bold(p))]) integral dd(p, 3)/(2 pi)^3 omega_p/2 [a^dagger (bold(p)) a(bold(p)) + (2pi)^3 delta^((3)) (bold(p)-bold(p))+a^dagger (-bold(p))a(- bold(p))]
 $
-in the Heisenberg picture the time-dependence lies in the operators
+relabeling the $- bold(p) -> bold(p)$ in the last term we get
 $
-  cal(O)_H = e^(i H t) cal(O)_S e^(- i H t)
+  markrect(H = integral dd(p, 3)/(2 pi)^3 omega_p a^dagger (bold(p)) a(bold(p)) + Delta_H, outset: #.3em)
 $
 with
 $
-  dv(cal(O)_H, t) = i [H,cal(O)_H]
+  Delta_H = 1/2 integral dd(p, 3) omega_p delta^((3)) (0)
 $
-in field theory we drop the subscripts and the picture is denoted by either $phi.alt (arrow(x))$ (Schrödinger picture) or $phi.alt(arrow(x), t) = phi.alt(x)$ (Heisenberg picture). The pictures agree at $t = 0$---and the commutation relations become
+which is divergent. By computation we find
 $
-  [phi.alt(x),phi.alt(y)] & = [pi (x), pi(y)] = 0 \
-       [phi.alt(x),pi(y)] & = i delta^3 (arrow(x)-arrow(y))
+  markrect([H,a(bold(p))] = - omega_p a(bold(p))";   "[H,a^dagger (bold(p))] = omega_p a^dagger (bold(p)), outset: #.3em)
 $
-since the operator $phi.alt(x)$ now depends on time we can consider how it evolves
+by using $T^(mu nu)$ we can also compute the spatial momentum operator
 $
-  dot(phi.alt) = i [H,phi.alt] &= i/2 [integral dd(y, 3) pi(y)^2+nabla_y phi.alt(y)^2 + m^2 phi.alt(y)^2, phi.alt(x)] \
-  &= i/2 integral dd(y, 3) [pi(y)^2,phi.alt(x)] \
-  &= i/2 integral dd(y, 3) {pi(y) [pi(y),phi.alt(x)]+[pi(y),phi.alt(x)]pi(y)} \
-  &= i/2 integral dd(y, 3) pi(y) {- 2 i delta^3(arrow(x)-arrow(y))} \
-  &= pi(x)
+  P^i &= integral dd(x, 3) dot(phi.alt) (bold(x)) partial^i phi.alt(bold(x)) \
+  &= integral dd(p, 3)/(2 pi)^3 p^i a^dagger (bold(p)) a (bold(p)) + Delta_(p^i)
 $
-and for $pi$
+with
 $
-  dot(pi) = i [H,pi] &= i/2 integral dd(y, 3) [pi(y)^2 + nabla_y phi.alt(y)^2+m^2 phi.alt(y)^2 , pi(x)] \
-  &= i/2 integral dd(y, 3) {[nabla_y phi.alt(y)^2,pi(x)] + m^2 [phi.alt(y)^2,pi(x)]} \
-  &= i/2 integral dd(y, 3) {nabla_y phi.alt(y) nabla_y [phi.alt(y),pi(x)]+nabla_y [phi.alt(y),pi(x)] nabla_y phi.alt(y) + 2 i m^2 phi.alt(y) delta^3 (arrow(x)-arrow(y))} \
-  &= - integral dd(y, 3) {nabla delta^3 (arrow(y)-arrow(x)) nabla phi.alt(y) + m^2 phi.alt(y) delta^3 (arrow(x)-arrow(y))} \
-  &=^"i.b.p" nabla^2 phi.alt - m^2 phi.alt
+  Delta_(p^i) = 1/2 integral dd(p, 3) p^i delta^((3)) (0) equiv 0
 $
-putting this together with the previous shows that the operator $phi.alt$ satisfies the Klein-Gordon equation
+we can then combine $H$ and $P$ (as we'd expect since both come from $T^(mu nu)$) into
 $
-  partial_mu partial^mu phi.alt + m^2 phi.alt = 0
+  markrect(P^mu = integral dd(p, 3)/(2pi)^3 p^mu a^dagger (bold(p)) a(bold(p)) + Delta_(p^mu), outset: #.3em)
 $
-we can show
+with $p^mu = (p^0, bold(p))=(omega_p, bold(p))$. It has the following commutation relations
 $
-  e^(i H t) a_arrow(p) e^(- i H t) = e^(- i E_arrow(p) t) a_arrow(p)",  " e^(i H t) a^dagger_arrow(p) e^(- i H t) = e^(i E_arrow(p) t) a_arrow(p)^dagger
+  markrect([P^mu, a^dagger (bold(p))] = p^mu a^dagger (bold(p))";   " [P^mu, a(bold(p))] = - p^mu a(bold(p)), outset: #.3em)
 $
-#proof[
-  Consider the first
-  $
-    dv(a_arrow(p) (t), t) = i [H, a_arrow(p)(t)] = - E_arrow(p) a_arrow(p) (t)
-  $
-  which can be solved to give
-  $
-    a_arrow(p) (t) = e^(- i E_arrow(p) t) a_arrow(p)
-  $
-  so
-  $
-    e^(i H t) a_arrow(p) e^(- i H t) = e^(- i E_arrow(p) t) a_arrow(p)
-  $
-  similarly can be done for $a^dagger$.
-]
-this means that the Fourier expansion of $phi.alt(x)$ can be written as
-$
-  phi.alt (x) = integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_arrow(p)) (a_arrow(p) e^(- i p dot x) + a_arrow(p)^dagger e^(i p dot x))
-$
-with $p dot x = E_arrow(p) t - arrow(p) dot arrow(x)$, since $a$ and $a^dagger$ get an additional exponential factor---$phi.alt (x)$ can be shown to satisfy the Klein-Gordon equation. This is a step toward obvious Lorentz invariance, but $phi.alt$ and $pi$ still satisfy
-$
-  [phi.alt (x), pi(y)] = i delta^3 (arrow(x)-arrow(y))
-$
-which tells us nothing about arbitrary spacetime seperations. For our theory to be causal we require that all spacelike separated operators commute
-$
-  [cal(O)_1 (x), cal(O)_2 (y)] = 0
-$
-for all $(x-y)^2 < 0$. This requirement means that a measurement at $x$ can't affect a measurement at $y$ when $x$ and $y$ are not causally connected. We define
-$
-  dd((x-y), d: Delta) = [phi.alt(x),phi.alt(y)]
-$
-this is a simple function given by
-$
-  dd((x-y), d: Delta) = integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) (e^(-i p dot (x-y))- e^(i p dot (x-y)))
-$
-this is Lorentz invariant due to the measure. It is non-vanishing for timelike separations since for e.g. $x-y = vecrow(t, 0)$ giving
-$
-  [phi.alt(arrow(x), 0),phi.alt(arrow(x), t)] tilde e^(- i m t) - e^(i m t)
-$
-it however vanishes for space-like separations. Since $dd((x-y), d: Delta) = 0$ at equal times for all $(x-y)^2 = - (arrow(x)-arrow(y))^2 < 0$. Explicitly take the equal time case
-$
-  [phi.alt (arrow(x),t), phi.alt (arrow(y),t)] = 1/2 integral dd(p, 3)/(2pi)^3 1/sqrt(arrow(p)^2 + m^2) (e^(i arrow(p) dot (arrow(x)-arrow(y)))-e^(- i arrow(p) dot (arrow(x)-arrow(y))))
-$
-$arrow(p)$ is an integration variable so we can flip its sign in the last exponent. Since $dd((x-y), d: Delta)$ is Lorentz invariant it can only depend on $(x-y)^2$ and must therefore vanish for all $(x-y)^2 < 0$---it must vanish in all spacelike frames if it vanishes in one frame.
 
-This is nice since it shows our theory is causal. This holds also for interacting theories, and is commonly posed as an axiom for local quantum field theories. However in the case of free fields the commutator is not an operator.
+== The Fock space
+We seek the space that $P^mu$ acts on. Since $P^mu$ is self-adjoint it has eigenstates $ket(k^mu)$ with real eigenvalues $k^mu$,
+$
+  P^mu ket(k^mu) = k^mu ket(k^mu)
+$
+then
+$
+  P^mu a^dagger (bold(q)) ket(k^mu) &= a^dagger (bold(q)) P^mu ket(k^mu) + q^mu a^dagger (bold(q)) ket(k^mu) \
+  &= (k^mu + q^mu) a^dagger (bold(q)) ket(k^mu)
+$
+and
+$
+  P^mu a(bold(q)) ket(k^mu) = (k^mu - q^mu) a(bold(q)) ket(k^mu)
+$
+so $a(bold(q))$ and $a^dagger (bold(q))$ are actually ladder operators which add or remove $q^mu$ to or from $ket(k^mu)$. Next note that $braket(psi, H, psi) >= 0$ for all states $ket(psi)$, then there must exist some state $ket(0)$ (the vacuum of the theory) such that
+$
+  a(bold(q)) ket(0) = 0
+$
+for all $bold(q)$. Otherwise successive application of $a(bold(q))$ would give negative eigenvalues of $H$. The vacuum has four-momentum
+$
+  P^mu ket(0) = Delta_(p^mu) ket(0) = cases(Delta_H",  " mu=0, 0",     " mu=i)
+$
+leading to the interpretation that $Delta_H$ is the vacuum energy. We remove this additive constant by redefining
+$
+  tilde(P)^mu := P^mu - Delta_(p^mu) = integral dd(p, 3)/(2pi)^3 p^mu a^dagger (bold(p)) a (bold(p))
+$
+so now $tilde(P)^mu ket(0) = 0$ (now we drop the tilde $tilde(P)^mu -> P^mu$). Then the state $a^dagger (bold(p)) ket(0)$ has four-momentum $p^mu$,
+$
+  P^mu a^dagger (bold(p)) ket(0) = p^mu a^dagger (bold(p)) ket(0)
+$
+with $p^mu = (E_p, bold(p))$ and $E_p = sqrt(bold(p)^2 + m^2)$. This is the relativistic dispersion relation for a particle of mass $m$, so we interpret $a^dagger (bold(p)) ket(0)$ as a one-particle state with energy $E_p$ and momentum $bold(p)$ (which is why we call $a^dagger$ the creation operator). In general an $N$-particle state with $E = E_(p_1) + dots + E_(p_N)$ and $bold(p) = bold(p)_1+dots +bold(p)_N$ is given by (a Fock state)
+$
+  a^dagger (bold(p)_1) dots a^dagger (bold(p)_N) ket(0)
+$
+which is nice.
 
-== Propagators
-We can also ask what the amplitude is to find a particle we've prepared at some point $y$ at some point $x$
-$
-  braket(0, phi.alt(x) phi.alt(y), 0) &= integral dd(p, p', 3)/(2pi)^6 1/sqrt(4 E_arrow(p) E_(arrow(p)')) braket(0, a_arrow(p) a^dagger_(arrow(p)'), 0) e^(-i p dot x + i p' dot y) \
-  &= integral dd(p, 3)/(2 pi)^3 1/(2 E_arrow(p)) e^(- i p dot (x-y)) equiv D(x-y)
-$
-where we call $D(x-y)$ the propagator. For spacelike separations $(x-y)^2 < 0$ it decays like
-$
-  D(x-y) tilde e^(- m abs(arrow(x)-arrow(y)))
-$
-so it decays quickly outside the lightcone, but is non-vanishing---but spacelike measurements commute so what is going on? We can write
-$
-  [phi.alt (x), phi.alt (y)] = D(x-y) - D(y-x) = 0 "if" (x-y)^2 < 0
-$
-when $(x-y)^2 < 0$ there is no Lorentz invariant way to order events. If a particle can travel from $x -> y$ it can also travel from $y-> x$. In any measurement these amplitudes cancel. For a complex scalar field we can look at $[psi(x),psi^dagger (y)]=0$ outside the lightcone. Then the interpretation is that the amplitude for the particle to propagate from $x -> y$ cancels the amplitude for the antiparticle to propagate from $y -> x$. This is also valid for the real scalar field now the antiparticle is just the particle itself.
+So we started by asserting that spacetime is filled with a real scalar field $phi.alt(bold(x))$, which we took to be a free field with the Lagrangian $cal(L) = 1/2 partial_mu phi.alt partial^mu phi.alt - 1/2 m^2 phi.alt^2$. We then interpreted this field as a field operator, i.e. at every point $bold(x)$: $phi.alt(bold(x))$ represents a self-adjoint operator. We've seen the existence of a lowest energy state, the vacuum $ket(0)$. Which corresponds to the absence of excitations of the field $phi.alt(bold(x))$. If the dispersion relation $E_p = sqrt(bold(p)^2 + m^2)$ is satisfied in some region of spacetime then a particle $a^dagger (bold(p)) ket(0)$ is created as an excitation of $phi.alt(bold(x))$---and in the free theory $m$ is interpreted as the mass of the particle. Since the underlying field $phi.alt(bold(x))$ is a scalar field, we call the associated particle a scalar particle.
 
-=== The Feynman Propagator
-We define the Feynman propagator
+This naturally leads to a multi-particle theory, since the particles are just excitations of the field. We can immediately prove part of the spin-statistics theorem: _scalar particles obey Bose statistics_. We just need to show that the $N$-particle state is symmetric under permutation, which follows from the commutation relations
 $
-  Delta_F (x-y) = braket(0, T phi.alt(x) phi.alt (y), 0)
-  = cases(
-    D(x-y) #h(15pt) & x^0 > y^0,
-    D(y-x) & y^0 > x^0
-  )
+  ket(bold(p)_1 dots bold(p)_i dots bold(p)_j dots bold(p)_N) &prop a^dagger (bold(p)_1) dots a^dagger (bold(p)_i) dots a^dagger (bold(p)_j) dots a^dagger (bold(p)_N) ket(0) \
+  &= a^dagger (bold(p)_1) dots a^dagger (bold(p)_j) dots a^dagger (bold(p)_i) dots a^dagger (bold(p)_N) ket(0) \
+  &prop ket(bold(p)_1 dots bold(p)_j dots bold(p)_i dots bold(p)_N)
 $
-with $T$ standing for time-ordering---we place all operators evaluated at later times to the left
-$
-  T phi.alt (x) phi.alt(y) = cases(
-    phi.alt (x) phi.alt (y) #h(15pt) & x^0 > y^0,
-    phi.alt(y)phi.alt(x) & y^0 > x^0
-  )
-$
-we now claim that the Feynman propagator can be written as
-$
-  Delta_F (x-y) = integral dd(p, 4)/(2pi)^4 i/(p^2-m^2) e^(-i p dot (x-y))
-$
-showing it is explicitly Lorentz invariant---note that this integral is ill-defined since each value of $arrow(p)$ introduces a pole when $p^0 = plus.minus E_arrow(p) = plus.minus sqrt(arrow(p)^2+m^2)$. We choose the contour we integrate over to go below the $- E_arrow(p)$ pole with a semicircular arc, and similarly go above the $+E_arrow(p)$ pole with a semicircular arc.
 
-#proof[
-  $
-    1/(p^2 - m^2) = 1/((p^0 - E_arrow(p))(p^0 + E_arrow(p)))
-  $
-  so the residue of the pole at $plus.minus E_arrow(p)$ is $plus.minus E_arrow(p)\/2$. For $x^0 > y^0$ we close the contour in the lower half plane, where $p^0 -> - i oo$ with the integrand vanishing since $e^(- i p^0 (x^0-y^0)) -> 0$. The integral over $p^0$ then picks up the residue at $plus E_arrow(p)$ giving $- pi i\/E_arrow(p)$ (minus because clockwise). So we obtain for $x^0 > y^0$
-  $
-    Delta_F (x-y) &= integral dd(p, 3)/(2pi)^4 (-2pi i)/(2 E_arrow(p)) i e^(-i E_arrow(p) (x^0-y^0) + i arrow(p) dot (arrow(x)-arrow(y))) \
-    &= integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) e^(- i p dot (x-y)) = D(x-y)
-  $
-  which is the Feynman propagator for $x^0 > y^0$. For $y^0 > x^0$ we close the contour anti-clockwise in the upper half plane giving
-  $
-    Delta_F (x-y) &= integral dd(p, 3)/(2pi)^4 (2 pi i)/(-2 E_arrow(p)) i e^(i E_arrow(p) (x^0-y^0) + i arrow(p) dot (arrow(x)-arrow(y))) \
-    &= integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) e^(-i E_arrow(p) (y^0 - x^0) - i arrow(p) dot (arrow(y)-arrow(x))) \
-    &= integral dd(p, 3)/(2pi)^3 1/(2 E_arrow(p)) e^(- i p dot (y-x)) = D(y-x)
-  $
-  which is the Feynman propagator for $y^0 > x^0$.
-]
-Instead of doing this it is typically written as
+=== Technicalities
+We normalize the one-particle momentum eigenstates as $ket(bold(p)) equiv sqrt(2 E_p) a^dagger (bold(p)) ket(0)$---we'll see why in a bit. Then
 $
-  Delta_F (x-y) = integral dd(p, 4)/(2pi)^4 (i e^(-i p dot(x-y)))/(p^2 - m^2 + i epsilon)
+  braket(bold(q), bold(p)) = 2 sqrt(E_p E_q) braket(0, a(bold(q)) a^dagger (bold(p)), 0)
 $
-with $epsilon > 0$ and infinitesimal---this shifts the poles slightly off axis so we can integrate along the real axis for $p^0$---this is called the $i epsilon$-prescription.
+using the commutation relations we move all $a^dagger$ to the left, this lets us abuse $a(bold(q)) ket(0) = 0 = bra(0)a^dagger (bold(p))$ and is a common _trick_. We obtain
+$
+  markrect(braket(bold(q), bold(p)) = (2 pi)^3 2 E_p delta^((3)) (bold(p)-bold(q)), outset: #.3em)
+$
+obviously these aren't strictly normalizable due to the $delta$-function---but we can form wavepackets as usual.
 
-=== Green's Functions
-The Feynman propagator is a Green's function for the Klein-Gordon equation---away from singularities we have
+With this normalization the identity operator is
 $
-  (partial_t^2 - nabla^2 + m^2) Delta_F (x-y) &= integral dd(p, 4)/(2pi)^4 i/(p^2-m^2) (-p^2 + m^2) e^(-i p dot (x-y)) \
-  &= - i integral dd(p, 4)/(2pi)^4 e^(-i p dot (x-y)) \
-  &= - i delta^4 (x-y)
+  markrect(bb(1)_"one-particle" = integral dd(p, 3)/(2pi)^3 1/(2 E_p) ketbra(bold(p)), outset: #.3em)
 $
-one can also defined the retarded and advanced Green's functions using other contours.
+this can be seen by acting on some arbitrary state
+$
+  ket(psi) = integral dd(q, 3) psi(bold(q)) ket(bold(q))
+$
+note that the measure
+$
+  integral dd(p, 3)/(2pi)^3 1/(2 E_p)
+$
+is Lorentz invariant, which is why it has been all over these notes.
 
-== Non-Relativistic Fields
-$dots$
+In quantum mechanics recall
+$
+  ket(x) = integral dd(p)/(2pi) e^(i p x) ket(p)
+$
+with $braket(x, p) = e^(i p x)$. With our normalization this becomes
+$
+  markrect(ket(bold(x)) = integral dd(p, 3)/(2pi)^3 1/(2 E_p) e^(- i bold(p) dot bold(x)) ket(bold(p)), outset: #.3em)
+$
+since then
+$
+  braket(bold(x), bold(p)) = integral dd(q, 3)/(2pi)^3 1/(2 E_p) e^(i bold(q) dot bold(x)) underbrace(braket(bold(q), bold(p)), prop delta^((3))(bold(p)-bold(q))) = e^(i bold(p) dot bold(x))
+$
+note that
+$
+  ket(bold(x)) = integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_p) (e^(-i bold(p) dot bold(x)) a^dagger (bold(p))+e^(i bold(p) dot bold(x)) a(bold(p))) ket(0) = phi.alt (bold(x)) ket(0)
+$
+
+
+== The complex scalar field
+We extend what we've done so far to a complex scalar field: $phi.alt(x) eq.not phi.alt^* (x)$. A nice way to do this is by writing
+$
+  phi.alt(x) = 1/sqrt(2) (phi.alt_1 (x) + i phi.alt_2 (x))
+$
+where $phi.alt_1$ and $phi.alt_2$ are independent real scalar fields of mass $m$ (with the complex field also having mass $m$). If we take the Lagrangian
+$
+  cal(L) = partial_mu phi.alt^dagger (x) partial^mu phi.alt(x) - m^2 phi.alt^dagger (x) phi.alt(x)
+$
+then $phi.alt_1$ and $phi.alt_2$ are canonically normalized---i.e. the Lagrangian decouples. Then we can quantize $phi.alt_1$ and $phi.alt_2$ as before and rewriting everything in terms of $phi.alt (x)$---simply forgetting $phi.alt_1$ and $phi.alt_2$ at the end.
+
+The fields $phi.alt (x)$ and $phi.alt^dagger (x)$ describe independent degrees of freedom with
+$
+         pi (x) & = pdv(cal(L), dot(phi.alt) (x)) = dot(phi.alt)^dagger (x) \
+  pi^dagger (x) & = pdv(cal(L), dot(phi.alt)^dagger (x)) = dot(phi.alt) (x)
+$
+so the Hamiltonian becomes
+$
+  H &= integral dd(x, 3) (pi^dagger (bold(x)) dot(phi.alt)^dagger (bold(x))+ pi(bold(x)) dot(phi.alt)(bold(x))-cal(L)) \
+  &= integral dd(x, 3) (pi^dagger (bold(x)) pi (bold(x))+ nabla phi.alt^dagger (bold(x)) nabla phi.alt(bold(x)) + m^2 phi.alt^dagger (bold(x)) phi.alt (bold(x)))
+$
+
+The fields are promoted to operators with commutation relations
+$
+  markrect([phi.alt (bold(x)),pi(bold(y))] = i delta^((3)) (bold(x)-bold(y)) = [phi.alt^dagger (bold(x)),pi^dagger (bold(y))], outset: #.3em)
+$
+with all others vanishing.
+
+The Fourier expansions become
+$
+  phi.alt (bold(x)) &= integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_p) (a (bold(p)) e^(i bold(p) dot bold(x))+ b^dagger (bold(p))e^(- i bold(p) dot bold(x))) \
+  phi.alt^dagger (bold(x)) &= integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_p) (b(bold(p)) e^(i bold(p) dot bold(x))+ a^dagger (bold(p)) e^(- i bold(p) dot bold(x)))
+$
+with $a$ and $b$ being independent operators. This can be seen by substituting the expansions for $phi.alt_1$ and $phi.alt_2$ into $phi.alt$ giving the identification
+$
+         a & = 1/sqrt(2) (a_1 + i a_2) \
+  b^dagger & = 1/sqrt(2) (a_1^dagger + i a_2^dagger)
+$
+implying
+$
+  [a(bold(p)),a^dagger (bold(q))] = (2pi)^3 delta^((3)) (bold(p)- bold(q)) = [b (bold(p)),b^dagger (bold(q))]
+$
+while other commutaters vanish.
+
+The expansion of the four-momentum operator is
+$
+  P^mu = integral dd(p, 3)/(2pi)^3 p^mu (a^dagger (bold(p)) a (bold(p))+ b^dagger (bold(p)) b (bold(p)))
+$
+note that his has two types of eigenstates
+$
+  a^dagger (bold(p)) ket(0) "and" b^dagger (bold(p)) ket(0)
+$
+both with energy $E_p$, so both have the same mass $m$---but they differ in their $"U"(1)$ charge. The Lagrangian is invariant under the global continuous $"U"(1)$ symmetry
+$
+  phi.alt (x) -> e^(i alpha) phi.alt (x)
+$
+with $alpha in RR$, and $e^(i alpha) in "U"(1)$. By Noether's theorem there is a conserved current
+$
+  markrect(j^mu = - i (phi.alt^dagger partial^mu phi.alt - partial^mu phi.alt^dagger phi.alt), outset: #.3em)
+$
+and related charge
+$
+  Q = integral dd(x, 3) j^0 = - integral dd(p, 3)/(2pi)^3 (a^dagger (bold(p)) a (bold(p))-b^dagger (bold(p)) b(bold(p)))
+$
+this acts on a particle with momentum $bold(p)$ as
+$
+  Q a^dagger (bold(p)) ket(0) & = - a^dagger (bold(p)) ket(0): "charge" -1 \
+  Q b^dagger (bold(p)) ket(0) & = + b^dagger (bold(p)) ket(0): "charge" +1
+$
+so these guys are fundamentally different---in fact we interpret $a^dagger (bold(p)) ket(0)$ as a particle of mass $m$ and charge $-1$ and $b^dagger (bold(p)) ket(0)$ as a particle with the same mass $m$ but charge $+1$, i.e. its anti-particle. We'll see later that this abstract charge coincides with the physical charge we are used to in physics.
+
+== Quantization à la Heisenberg
+Recall in the Heisenberg picture:
+$
+  A^((H)) (t) = e^(i H^((S))(t-t_0)) A^((S)) e^(- i H^((S))(t-t_0))
+$
+at $t=t_0$ this coincides with the Schrödinger picture $A^((H))(t_0) = A^((S))$. We'll use $t_0 equiv 0$. The definition implies $H^((H)) (t) = H^((S))$ and one can show that the time-evolution of the operators is determined by
+$
+  dv(, t) A^((H)) (t) = i [H,A^((H)) (t)]
+$
+and the Schrödinger picture commutators become equal time commutators e.g:
+$
+  [q_i^((H)) (t), p_j^((H)) (t)] = i delta_(i j)
+$
+In field theory we similarly define the Heisenberg fields:
+$
+  phi.alt^((H)) (t, bold(x)) equiv phi.alt(x) &= e^(i H^((S)) t) phi.alt^((S)) (bold(x)) e^(-i H^((S)) t) \
+  pi (x) &= e^(i H^((S)) t) pi^((S)) (bold(x)) e^(-i H^((S)) t) \
+  cal(H) (x) &= e^(i H^((S)) t) cal(H)^((S)) (bold(x)) e^(- i H^((S)) t)
+$
+these obey equal time commutation relations
+$
+  markrect([phi.alt(x), pi(y)] &= i delta^((3)) (bold(x)-bold(y))";   " [phi.alt(x),phi.alt(y)] = 0 = [pi(x),pi(y)], outset: #.3em)
+$
+the Heisenberg equation of motion for $phi.alt (x)$ becomes
+$
+  pdv(, t) phi.alt(x) = i [H,phi.alt(x)] =^("pick" H "at" t) i integral dd(y, 3) [cal(H) (y),phi.alt(x)]
+$
+with
+$
+  cal(H) (y) = 1/2 pi^2 (y) + 1/2 (nabla phi.alt(y))^2 + 1/2 m^2 phi.alt^2 (y)
+$
+for a real scalar field. The only non-zero term is
+$
+  1/2 [pi^2 (y),phi.alt (x)] = -i pi(y) delta^((3)) (bold(x)-bold(y))
+$
+giving
+$
+  pdv(, t) phi.alt(x) = pi(x)
+$
+similarly
+$
+  pdv(, t) pi(x) = i[H,pi(y)] = nabla^2 phi.alt (x) - m^2 phi.alt (x)
+$
+combining these gives the Klein-Gordon equation,
+$
+  markrect((partial_mu partial^mu + m^2) phi.alt (x) = 0, outset: #.3em)
+$
+so the Klein-Gordon equation is an operator equation!
+
+Recall from quantum mechanics that for any continuous symmetry generated by $G$:
+$
+  A -> A' = e^(i epsilon G) A e^(- i epsilon G)
+$
+we can write
+$
+  dv(A, epsilon) = i [G,A]
+$
+for some infinitesimal $epsilon$---this is why the Heisenberg equation describes how operators change under infinitesimal time translations. We can write the generalization of the Heisenberg equation for $phi.alt(x)$ as
+$
+  partial^mu phi.alt(x) = i [P^mu, phi.alt(x)]
+$
+and as a consequence for finite spacetime translations:
+$
+  phi.alt(x^mu + a^mu) = e^(i a^mu P_mu) phi.alt (x) e^(-i a^mu P_mu)
+$
+
+We now find the expansions for the Heisenberg field:
+$
+  phi.alt (x) = integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_p) (e^(i H t) a(bold(p))e^(-i H t) e^(i bold(p)dot bold(x))+e^(i H t) a^dagger (bold(p))e^(-i H t) e^(-i bold(p)dot bold(x)))
+$
+since $[H,a(bold(p))] = - a(bold(p)) E_p$ we find
+$
+  H^n a(bold(p)) = a(bold(p)) (H-E_p)^n
+$
+so
+$
+  e^(i H t) a(bold(p)) = a(bold(p)) e^(i (H-E_p) t)
+$
+giving
+$
+  markrect(phi.alt (x) = integral dd(p, 3)/(2 pi)^3 1/sqrt(2 E_p) (a(bold(p))e^(-i p dot x) + a^dagger (bold(p))e^(i p dot x)), outset: #.3em)
+$
+with $p dot x equiv p_mu x^mu$---using $pi(x) = dot(phi.alt) (x)$ these can be inverted (by Fourier's trick) to find the expansions of the annihilation and creation operators.
+
+== Causality & Propagators
+=== Causality
+For causality to hold we need that measurements at spacelike distances commute,
+$
+  [cal(O)_1 (x), cal(O)_2 (y)] =^! 0 " for " (x-y)^2 < 0
+$
+so the task lies in computing
+$
+  Delta(x-y) equiv [phi.alt (x),phi.alt (y)]
+$
+for general times---plugging in the expansions gives:
+$
+  markrect(Delta (x-y) = integral dd(p, 3)/(2pi)^3 1/(2 E_p) (e^(-i p dot (x-y))-e^(-i p dot (y-x))), outset: #.3em)
+$
+now we assume $(x-y)^2 < 0$. Given the measure is Lorentz invariant we can apply a Lorentz transformation such that $(x^0-y^0) = 0$---always possible for spacelike seperated points. Then
+$
+  evaluated(Delta (x-y))_((x-y)^2 < 0) = integral dd(p, 3)/(2pi)^3 1/(2 E_p) (e^(i bold(p) dot (bold(x)-bold(y)))-e^(-i bold(p) dot (bold(x)-bold(y))))
+$
+which is zero upon changing $bold(p) -> - bold(p)$ in the second term. It follows that all commutators of the form
+$
+  [partial_(x^mu) phi.alt (x),phi.alt (y)] = partial_(x^mu) [phi.alt (x),phi.alt (y)] = 0 " for " (x-y)^2 < 0
+$
+so for all local operators $ [cal(O)_i (x), cal(O)_j (y)] = 0 "if" (x-y)^2 <0 $ and causality is maintained. The above is only possible since we are working in a free theory---for more complicated theories one takes this as an axiom of quantum field theory.
+
+=== Propagators
+The probability amplitude for a particle emitted at $y$ to propagate to $x$ is given by the propagator
+$
+  D(x-y) equiv braket(x, y) = braket(0, phi.alt(x) phi.alt(y), 0)
+$
+by a mode expansion
+$
+  D(x-y) &= integral.double dd(p, 3)/(2pi)^3 1/sqrt(2 E_p) dd(q, 3)/(2pi)^3 1/sqrt(2 E_q) bra(0) (a(bold(q)) e^(-i q dot x) + a^dagger (bold(q)) e^(i q dot x)) \
+  & #h(13.5em) times (a(bold(p)) e^(-i p dot y) + a^dagger (bold(p))e^(i p dot y)) ket(0)
+$
+from $a(bold(p)) ket(0) = 0 = bra(0) a^dagger (bold(q))$ the only surviving term is
+$
+  e^(-i q dot x) e^(i p dot x) braket(0, a(bold(q)) a^dagger (bold(p)), 0) = e^(-i q dot x) e^(i p dot x) (2pi)^3 delta^((3)) (bold(q)-bold(p))
+$
+the $delta^((3))$ eats the $q$-integral giving
+$
+  markrect(D(x-y) = integral dd(p, 3)/(2 pi)^3 1/(2 E_p) e^(-i p (x-y)), outset: #.3em)
+$
+leading us to write
+$
+  [phi.alt (x),phi.alt (y)] = underbrace(D(x-y), "particle" y -> x) - underbrace(D(y-x), "particle" x -> y)
+$
+so the commutator can be interpreted as two physical processes, whose probability amplitudes seemingly cancel for spacelike distances.
+
+Similarly for a complex scalar field we have operators like
+$
+         phi.alt (x) & tilde a(bold(p)) + b^dagger (bold(p)) \
+  phi.alt^dagger (x) & tilde a^dagger (bold(p)) + b (bold(p))
+$
+in this case $[phi.alt (x), phi.alt (y)] = 0$ for all $x,y$. But the commutator
+$
+  [phi.alt (x), phi.alt^dagger (y)] = underbrace(braket(0, phi.alt(x) phi.alt^dagger (y), 0), "particle" y -> x) - underbrace(braket(0, phi.alt^dagger (y) phi.alt (x), 0), "anti-particle" x -> y)
+$
+so for $(x-y)^2 < 0$ the probability of the particle propagating from $y -> x$ is cancelled by the probability that its anti-particle propagates from $x -> y$!
+
+Now we define the most important object in quantum field theory, the Feynman propagator:
+$
+  markrect(D_F (x-y) equiv braket(0, T phi.alt(x) phi.alt(y), 0), outset: #.3em)
+$
+where we define the time-ordering operator $T$:
+$
+  T phi.alt (x) phi.alt (y) = cases(phi.alt (x) phi.alt (y)"   if" x^0 >= y^0, phi.alt(y) phi.alt(x)"   if" y^0 > x^0)
+$
+the Feynman propagator can be written as
+$
+  D_F (x-y) &= Theta(x^0-y^0) underbrace(braket(0, phi.alt(x) phi.alt(y), 0), D(x-y)) + Theta(y^0 - x^0) underbrace(braket(0, phi.alt(y) phi.alt(x), 0), D(y-x)) \
+  &= Theta (x^0-y^0) evaluated(integral dd(p, 3)/(2pi)^3 1/(2 E_p) e^(-i p dot (x-y)))_(p^0 = E_p) \
+  &#h(1em) + Theta(y^0-x^0) evaluated(integral dd(p, 3)/(2pi)^3 1/(2 E_p) e^(i p dot (x-y)))_(p^0 = E_p) \
+  &=^(bold(p)->-bold(p) "in 2nd term") integral dd(p, 3)/(2pi)^3 e^(i bold(p) dot (bold(x)-bold(y))) [Theta(x^0-y^0) 1/(2 E_p) e^(-i E_p (x^0-y^0))\ &#h(14em)+Theta(y^0-x^0) 1/(2 E_p) e^(i E_p (x^0 - y^0))]
+$
+the bracketed term can be written as a contour integral. We can write
+$
+  Theta(x^0-y^0) 1/(2 E_p) e^(-i E_p (x^0-y^0)) = underbrace(-, "cw-cont") Theta(x^0-y^0) underbrace(1/(2 pi i) integral.cont_C_1 dd(p^0) e^(-i p^0 (x^0-y^0))/((p^0-E_p)(p^0+E_p)), display(-2 pi i underbracket([e^(-i E_p (x^0-y^0))/(2 E_p)], "residue")))
+$
+where $C_1$ is closed in the lower half-plane and clockwise with $epsilon$-surrounding to avoid the poles at $p^0 = plus.minus E_p$. We go above the pole at $+E_p$ and below the pole at $- E_p$, thereby picking up the residue at $p^0 = + E_p$. Similarly the second term in bracket can be written as
+$
+  Theta(y^0-x^0) 1/(2 E_p) e^(i E_p (x^0-y^0)) = - Theta(y^0-x^0) 1/(2 pi i) integral.cont_C_2 dd(p^0) e^(-i p^0 (x^0-y^0))/((p^0-E_p)(p^0+E_p))
+$
+with $C_2$ running counterclockwise and picking up the pole at $p_0 = - E_p$ (i.e. same contour along $RR$ but closed in the upper half-plane).
+
+Both of these are valid for any $R > E_p$, but if $R -> oo$ then the integrals in the lower/upper half-plane each vanish. So at $R -> oo$ we can add them (since only the parts along $RR$ and the small $epsilon$-surroundings contribute), and using $Theta(x^0-y^0)+Theta(y^0-x^0) = 1$ we get
+$
+  D_F (x-y) = integral.cont_C dd(p, 4)/(2pi)^4 i/(p^2 -m^2) e^(-i p dot (x-y))
+$
+where we've used $(p^0-E-p)(p^0+E_p) = p^2 - m^2$. For a contour integral the relative position of the contour and the poles is the only thing that matters. Therefore we can instead pick $C = RR$ and then shift our poles by $plus.minus i tilde(epsilon)\/E_p$ with $tilde(epsilon)->0$. This gives
+$
+  p^0 = minus.plus E_p plus.minus (i tilde(epsilon))/E_p
+$
+then
+$
+  (p^0-(E_p - i tilde(epsilon)\/E_p))(p^0+(E_p-i tilde(epsilon)\/E_p)) = (p^0)^2-E_p^2 + 2 i tilde(epsilon) + epsilon^2\/E_p^2 = p^2 - m^2 + i epsilon
+$
+with $epsilon = 2 i tilde(epsilon) - i tilde(epsilon)\/E_p -> 0$, then the Feynman propagator becomes
+$
+  markrect(D_F (x-y) = integral dd(p, 4)/(2pi)^4 i/(p^2 - m^2 + i epsilon) e^(-i p dot (x-y)), outset: #.3em)
+$
+with $p^0$ integrated along $RR$ and with the limit $epsilon -> 0$ being applied after integrating.
+
+=== As Green's functions
+By computation one can show that the Feynman propagator is a Green's function for the Klein-Gordon equation:
+$
+  (square_x + m^2) D_F (x-y) = -i delta^((4)) (x-y)
+$
+Now consider the general solution to
+$
+  (square + m^2) Delta (x) = -i delta^((4)) (x)
+$
+this is found by a Fourier transform
+$
+  Delta (x) = integral dd(p, 4)/(2pi)^4 tilde(Delta)(p) e^(-i p dot x)";  " delta^((4)) (x) = integral dd(p, 4)/(2pi)^4 e^(-i p dot x)
+$
+and
+$
+  (-p^2 + m^2) tilde(Delta)(p) = -i => tilde(Delta)(p) = i/(p^2-m^2)
+$
+this has two poles at $p^0 = plus.minus sqrt(E^2_bold(p))$ there are four contours to avoid these---we've already seen the Feynman propagator result at one of these. Avoiding both poles along a contour in the upper half-plane gives the retarded Green's function
+$
+  D_R (x-y) & = Theta(x^0-y^0) [D(x-y)-D(y-x)] \
+            & equiv Theta(x^0-y^0) braket(0, [phi.alt(x),phi.alt(y)], 0)
+$
+doing the same but in the lower half-plane gives the advanced Green's function
+$
+  D_A (x-y) = Theta(y^0-x^0) [D(x-y)-D(y-x)]
+$

@@ -6,7 +6,7 @@
 #show: thmrules.with(qed-symbol: $square$)
 #show: note.with(
   title: [
-    *quantum field theory*
+    *introductory quantum field theory*
   ],
   authors: (
     (
@@ -14,14 +14,17 @@
     ),
   ),
   abstract: [
-    self-study notes of qft---currently working through Tong's notes.
+    self-study notes of qft.
   ],
 )
 
 = Introduction
-The first part of these notes is concerned with canonical quantization (primarily based on Tong's notes)---the second part handles the path integral approach. We'll work with natural units $c = hbar = 1$.
+Quantum field theory is essentially the formalism required to combine quantum mechanics and relativity---we work in natural units: $hbar = c = 1$. These notes are heavily inspired by Timo Weigand's notes.
 
-Quantum field theory is essentially the formalism required to combine quantum mechanics and relativity.
 
-#include "chpt/chpt-1.typ"
-#include "chpt/chpt-2.typ"
+
+#include "chpt/chpt-1.typ" // classical field theory
+#include "chpt/chpt-2.typ" // free scalar field, spin 0
+#include "chpt/chpt-3.typ" // interacting scalar theory
+//#include "chpt/chpt-4.typ" // dirac field, spin 1/2
+//#include "chpt/chpt-5.typ" // spin 1
