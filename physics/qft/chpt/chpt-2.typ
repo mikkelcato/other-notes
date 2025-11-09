@@ -366,6 +366,7 @@ and as a consequence for finite spacetime translations:
 $
   phi.alt(x^mu + a^mu) = e^(i a^mu P_mu) phi.alt (x) e^(-i a^mu P_mu)
 $
+so $P^mu$ generate spacetime translations.
 
 We now find the expansions for the Heisenberg field:
 $
