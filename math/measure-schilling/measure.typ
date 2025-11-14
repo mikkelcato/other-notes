@@ -1,3 +1,4 @@
+//**** init-ting
 #import "@preview/physica:0.9.5": *
 #import "temp.typ": *
 
@@ -5,18 +6,16 @@
 #show: thmrules.with(qed-symbol: $square$)
 #show: note.with(
   title: [
-    *point-set topology notes*
+    *measure theory*
   ],
   authors: (
     (
-      name: "mikkelius_",
+      name: "mkh",
     ),
   ),
   abstract: [
-    notes on basic topology and some metric stuff.
+    self-study notes of measure theory---based primarily on _Measures, Integrals and Martingales_ by Schilling.
   ],
 )
 
 #include "chpt/chpt-1.typ"
-#include "chpt/chpt-2.typ"
-#include "chpt/chpt-3.typ"

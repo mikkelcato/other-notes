@@ -145,3 +145,66 @@ $
 $
 
 == LSZ reduction formula
+We want to compute the matrix element
+$
+  braket(p_1\, dots\, p_n", out", q_1\, dots\, q_r", in")
+$
+recall
+$
+  phi.alt_"in" (x) = integral dd(k, 3)/(2pi)^3 1/sqrt(2 E_k) (a_"in" (bold(k)) e^(-i k dot x) + a_"in"^dagger (bold(k))e^(i k dot x))
+$
+then by definition
+$
+  ket(q_i", in") = sqrt(2 E_q_i) a_"in"^dagger (q_i) ket(Omega)
+$
+we can invert the above to find expansions for $a_"in"$ and $a_"in"^dagger$ giving
+$
+  a_"in" (bold(q)) = i/sqrt(2 E_q) evaluated(integral dd(x, 3) e^(i q dot x) arrow.l.r(partial_0) phi.alt_"in" (x))_(x^0=t)
+$
+with the integral being evaluated at arbitrary time $t$. Then we can write
+$
+  braket(p_1\, dots\, p_n", out", q_1\,dots\,q_r", in") &= sqrt(2 E_q_1) braket(p_1\,dots\,p_n", out", a_"in"^dagger (bold(q)_1), q_2\,dots\,q_r", in") \
+  &= 1/i evaluated(integral dd(x, 3) e^(-i q_1 dot x) arrow.r.l(partial_0) braket(p_1\,dots\,p_n", out", phi.alt_"in" (t,bold(x)), q_2\,dots\,q_r", in"))_(x^0=t)
+$
+taking $t -> - oo$ and using
+$
+  lim_(t->-oo) braket(1_bold(p), phi.alt_"in" (t,bold(x)), Omega) = lim_(t -> - oo) 1/sqrt(Z) braket(1_bold(p), phi.alt(t, bold(x)), Omega)
+$
+(which generalizes) we obtain
+$
+  & braket(p_1\,dots\,p_n", out", q_1\,dots\,q_r", in") \ &= lim_(t-> - oo) 1/sqrt(Z) underbrace(1/i integral dd(x, 3) e^(-i q_1 dot x) arrow.r.l(partial_0) braket(p_1\,dots\,p_n", out", phi.alt(x), q_2\,dots\,q_r", in"), equiv integral dd(x, 3) f(t,bold(x)))
+$
+now note
+$
+  &(lim_(t -> oo) - lim_(t-> - oo)) integral dd(x, 3) f(t,bold(x)) = underbrace(lim_(t_f -> oo) integral_(t_i -> -oo)^(t_f) dd(t) pdv(, t) integral dd(x, 3) f(t,bold(x)), equiv integral dd(x, 4) partial_0 f(x)) \
+  &=> lim_(t-> -oo) integral dd(x, 3) f(t,bold(x)) = lim_(t-> + oo) integral dd(x, 3) f(t,bold(x)) - integral dd(x, 4) partial_0 f(x)
+$
+so defining
+$
+  B & equiv integral dd(x, 4) 1/sqrt(Z) partial_0 [e^(-i q_1 dot x) 1/i arrow.r.l(partial_0) braket(p_1\,dots\,p_n", out", phi.alt(x), q_2\,dots\,q_r", in")] \
+  A & equiv lim_(t-> oo) integral dd(x, 3) 1/i e^(-i q_1 dot x) arrow.r.l(partial_0) underbrace(1/sqrt(Z) braket(p_1\,dots\,p_n", out", phi.alt(x), q_2\,dots\,q_r", in"), "for" t-> oo": " braket(p_1\,dots\,p_n", out", phi.alt_"out" (x), q_2\,dots\,q_r", in")) \
+  &= braket(p_1\,dots\,p_n", out", a_"out"^dagger (bold(q)_1), q_2\,dots\,q_r", in") sqrt(2 E_q_1)
+$
+we can write $ braket(p_1\,dots\,p_n", out", q_1\,dots\,q_r", in") = A-B $
+
+The $A$ term can be written as
+$
+  A = sum_(k=1)^n 2 E_p_k (2pi)^3 delta^((3)) (bold(p)_k-bold(q)_1) braket(p_1\,dots underbrace(\, hat(p)_k\,, "without")dots\,p_n", out", q_2\,dots\,q_r", in") \
+$
+to get this we commute $a_"out"^dagger$ past all $a_"out"$ giving $n$ terms with a respective $delta$-function. The $B$ term can be written as
+$
+  B &= i integral dd(x, 4) 1/sqrt(Z) partial_0 [e^(-i q_1 dot x) partial_0 expval(dots)- (partial_0 e^(-i q_1 dot x)) expval(dots)] \
+  &=^"cross terms cancel" i integral dd(x, 4) 1/sqrt(Z) [e^(-i q_1 dot x) partial_0^2 expval(dots)-(partial_0^2 e^(-i q_1 dot x) expval(dots))]
+$
+now
+$
+  -partial_0^2 e^(-i q_1 dot x) = (q_1^0)^2 e^(-i q_1 dot x) = (q_1^2 + bold(q)_1^2) e^(-i q_1 dot x) = (m^2 - nabla^2) e^(-i q_1 dot x)
+$
+we integrate by parts twice (and using that boundary terms vanish at $plus.minus oo$)
+$
+  integral dd(x, 4) (m^2 - nabla^2) e^(-i q_1 dot x) expval(dots) =^"i.b.p" integral dd(x, 4) e^(-i q_1 dot x) (m^2 - nabla^2) expval(dots)
+$
+so we find
+$
+  B = - i 1/sqrt(Z) integral dd(x_1, 4) e^(-i q_1 dot x_1) (square_1 + m^2) braket(p_1\,dots\,p_n", out", phi.alt(x_1), q_2\,dots\,q_r", in")
+$
