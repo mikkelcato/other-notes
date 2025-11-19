@@ -14,8 +14,8 @@
     ),
   ),
   abstract: [
-    self-study notes of basic differential geometry (and Riemannian geometry) for physics---based on David Tong's GR notes and Sean Carroll's GR notes.
+    self-study notes of basic differential geometry and Riemannian geometry for physics---primarily based on chapters 5-7 of Nakahara supplemented by David Tong's GR notes and Sean Carroll's GR notes.
   ],
 )
 
-#include "chpt/chpt-1.typ"
+#include "chpt/chpt-1.typ" // manifold/diff geometry

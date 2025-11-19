@@ -7,488 +7,640 @@
 #show: thmrules.with(qed-symbol: $square$)
 #show: chpt-note.with()
 
-= Manifolds
-The space we work in is what we call a manifold---generally it can be thought of as a curved, $n$-dimensional space, where any singular patch looks locally like $RR^n$. We will slowly begin associating various mathematical objects to this space.
+#set enum(indent: 2em)
 
-As a physicist the end goal is to understand spacetime as a manifold and the various structures living on it.
+= Differential geometry
+== Manifolds
+A manifold is in general a topological space which is locally homeomorphic to $RR^m$. This enables us to give each point in a manifold a set of $m$ numbers, the local coordinate. If the manifold is not homeomorphic to $RR^m$ globally, then we have to introduce multiple coordinates, meaning in some cases any point can have multiple coordinates. We require that manifolds behave nicely, so we want the transition between coordinates to be _smooth_, this will let us do calculus on manifolds using tools we are already familiar with. This notion is made concrete by the actual definition:
 
-== Topological spaces
-As with many other mathematical definitions there is usually a lot of backstory needed for completeness. Here we recall the definition of a topological space:
+#def[Manifold][
+  $M$ is an $m$-dimensional differentiable manifold if
 
-#def[Topological space][
-  A topological space $M$ is a set of points with a topology $cal(T)$. This is a collection of open subsets ${cal(O)_a subset M}$ obeying:
+  1. $M$ is a topological space.
 
-  1. Both the set $M$ and the empty set $emptyset$ are open subsets, $M in cal(T)$ and $emptyset in cal(T)$.
+  2. $M$ is provided with a family of pairs ${(U_i, phi_i)}$.
 
-  2. The intersection of a finite number of open sets also an open set. So if $cal(O)_1 in cal(T)$ and $cal(O)_2 in cal(T)$ then $cal(O)_1 inter cal(O)_2 in cal(T)$.
+  3. ${U_i}$ is a family of open sets which covers $M$, meaning $union.big_i U_i = M$. And $phi_i$ is a homeomorphism from $U_i$ onto an open subset $U'_i$ of $RR^m$.
 
-  3. The union on any number of open sets is also an open set: So if $cal(O)_gamma in cal(T)$ then $union_gamma cal(O)_gamma in cal(T)$.
+  4. Given $U_i$ and $U_j$ with $U_i inter U_j eq.not emptyset$, the map $psi_(i j) = phi_i compose phi_j^(-1)$ from $phi_j (U_i inter U_j)$ to $phi_i (U_i inter U_j)$ is infinitely differentiable or smooth.
 ]
 
-Given a point $p in M$ we call $cal(O) in cal(T)$ a neighbourhood of $p$ if $p in cal(O)$. Since we want nice topological spaces we require they are Hausdorff: for any $p, q in M$ with $p eq.not q$ there exists $cal(O)_1, cal(O)_2 in cal(T)$ such that $p in cal(O)_1$ and $q in cal(O)_2$ and $cal(O)_1 inter cal(O)_2 = emptyset$---meaning it is possible to always separate any two points $p, q in M$ using two disjoint open subsets.
+We call the pair $(U_i, phi_i)$ a chart with the family of charts being an atlas. The subset $U_i$ is called the coordinate neighbourhood while $phi_i$ is the coordinate. The homeomorphism $phi_i$ is represented by $m$ functions ${x^1 (p), dots, x^m (p)}$ with $p in U_i$. Any point $p in M$ exists independently of the coordinate representation we choose to ascribe it. So in each coordinate neighbourhood $U_i$ the manifold $M$ looks like an open subset of $RR^m$ with elements ${x^1, dots, x^m}$ (locally Euclidean).
 
-#def[Homeomorphism][
-  A homeomorphism between topological spaces $(M,cal(T))$ and $(tilde(M),tilde(cal(T)))$ is a map $f: M -> tilde(M)$ which is
+In the case that $U_i$ and $U_j$ overlap, two coordinate representations are assigned to any point $p in U_i inter U_j$. The fourth axiom ensures the transition between these is smooth. The map $phi_i$ assigns $m$ coordinate values $x^mu$ to $p$ while $phi_j$ assigns $m$ different coordinate values $y^nu$ to $p$. The transition between these $x^mu = x^mu (y)$ is given by $m$ functions of $m$ variables. This function $x^mu = x^mu (y)$ is the explicit form of $psi_(j i) = phi_j compose phi_i^(-1)$. Differentiability is then defined as usual with the transformation being smooth if each $x^mu (y)$ is smooth with respect to all $y^nu$.
 
-  1. Injective: for $p eq.not q$, $f(p) eq.not f(q)$.
+We already know many manifolds: $RR^n$, $D^n$, $S^n$ and $T^n$.
 
-  2. Surjective: $f(M) = tilde(M)$ meaning for each $tilde(p) in tilde(M)$ there exists a $p in M$ such that $f(p) = tilde(p)$.
+=== Smoothness
+Let $f : M -> N$ so any point $p in M$ is mapped to $f(p) in N$. Take a chart $(U,phi)$ on $M$ and a chart $(V,psi)$ on $N$ with $p in U$ and $f(p) in V$. Then $f$ has the presentation
+$
+  psi compose f compose phi^(-1) : RR^m -> RR^n
+$
+if $phi(p) = {x^mu}$ and $psi(f(p)) = {y^alpha}$ then the above is just $y = psi compose f compose phi^(-1) (x)$. This is sometimes written as $y = f(x)$ or $y^alpha = f^alpha (x^mu)$. Given $y^alpha = f^alpha (x^mu)$ is smooth then $f$ is called differentiable at $p$ or $x = phi (p)$.
 
-  3. Bicontinuous. Meaning $f$ and $f^(-1)$ are both continuous. We define continuity as usual: $f$ is continous if for all $tilde(cal(O)) in tilde(cal(T))$, $f^(-1) (tilde(cal(O))) in cal(T)$.
+#proposition[Smoothness of $f$ is chart-independent in $M$ and $N$.]
+#proof[
+  We first show it is independent of the chart in $M$. Let $(U_1, phi_1)$ and $(U_2,phi_2)$ be two charts in $M$ and pick $p in U_1 inter U_2$. The coordinates by $phi_1$ are ${x_1^mu}$ and the coordinates by $phi_2$ are ${x_2^mu}$. In terms of ${x_1^mu}$ we have
+  $
+    F_1 = psi compose f compose phi_1^(-1)
+  $
+  and in terms of ${x_2^mu}$ we have
+  $
+    F_2 = psi compose f compose phi_2^(-1) = psi compose f compose phi_1^(-1) compose underbrace((phi_1 compose phi_2^(-1)), psi_(1 2)) = F_1 compose psi_12
+  $
+  By definition $psi_12$ is smooth so if $F_1$ is smooth then  $F_2$ is smooth.
 
+  Similarly let $(V_1, psi_1)$ and $(V_2, psi_2)$ be two charts in $N$. Then by $psi_1$ we have
+  $
+    F_1 = psi_1 compose f compose phi^(-1)
+  $
+  and by $psi_2$ we have
+  $
+    F_2 = psi_2 compose f compose phi^(-1) = underbrace((psi_2 compose psi_1^(-1)), psi_12^(-1)) compose psi_1 compose f compose phi^(-1) = psi_12^(-1) compose F_1
+  $
+  By definition $psi_12^(-1)$ is smooth and we are done.
 ]
 
-== Differentiable manifolds
-This is what we care about.
+#def[Diffeomorphism][
+  Let $f : M -> N$ be a homeomorphism and $psi$ and $phi$ be coordinate functions as above.
 
-#def[Differentiable manifold][
-  An $n$-dimensional differentiable manifold is a Hausdorff topological space $M$ such that
-
-  1. $M$ is locally homeomorphic to $RR^n$. Meaning for each $p in M$ there is an open set $cal(O)$ such that $p in cal(O)$ (neighbourhood) and a homeomorphism $phi.alt : cal(O) -> U$ with $U$ an open subset of $RR^n$.
-
-  2. Take two open subsets $cal(O)_alpha$ and $cal(O)_beta$ that overlap: $cal(O)_alpha inter cal(O)_beta eq.not emptyset$. We require that the maps $phi.alt_alpha: cal(O)_alpha -> U_alpha$ and $phi.alt_beta : cal(O)_beta -> U_beta$ are compatible, meaning that $phi.alt_beta compose phi.alt_alpha^(-1) : phi.alt_alpha (cal(O)_alpha inter cal(O)_beta) -> phi.alt_beta (cal(O)_alpha inter cal(O)_beta)$ is smooth (i.e. infinitely differentiable on $C^oo$), as is its inverse.
+  If $psi compose f compose phi^(-1)$ is invertible and both $y = psi compose f compose phi^(-1) (x)$ and $x = phi compose f^(-1) compose psi^(-1) (y)$ are smooth then $f$ is a diffeomorphism. In this case $M$ and $N$ are diffeomorphic $M equiv N$.
 ]
 
-We call the maps $phi.alt_alpha$ charts and the collection of charts an atlas. Each chart can be thought of as providing a coordinate system to label $cal(O)_alpha$ of $M$. The coordinate associated to $p in cal(O)_alpha$ is
-$
-  phi.alt_alpha (p) = (x^1 (p), dots, x^n (p)) = x^mu (p)
-$
-the maps $phi.alt_beta compose phi.alt_alpha^(-1)$ then take us between different coordinate systems and is why we call them transition functions. The compatibily condition ensures there is no inconsistency between the various coordinate systems.
+Two diffeomorphic spaces are regarded as equivalent since all diffeomorphic spaces can be smoothly deformed into each other.
 
-=== Diffeomorphism
-The reason why we might want to locally map a manifold to $RR^n$ is because we know $RR^n$.
-
-For example we say a map $f: M -> RR$ is smooth if the map $f compose phi.alt^(-1) : U -> RR$ is smooth for all $phi.alt$. Similarly a map $f : M -> N$ is smoth if the map $psi compose f compose phi.alt^(-1): U->V$ is smooth for all $phi.alt : M -> U subset RR^M$ and $psi: N -> V subset RR^N$.
-
-A diffeomorphism is a smooth homeomorphism $f : M -> N$---so an invertible, smooth map between manifolds $M$ and $N$ that has a smooth inverse. If such a map exists $M$ and $N$ are said to be diffeomorphic.
-
-#pagebreak()
-= Tangent spaces
-Now we want to understand how to do calculus on manifolds, starting with differentiation. Consider a function $f : M -> RR$. To differentiate this at some point $p$ we introduce the chart $phi.alt = (x^1, dots, x^n)$ in a neighbourhood of $p$. Then we can construct $f compose phi.alt^(-1) : U -> RR$ with $U subset RR^n$. Since we know how to differentiate on $RR^n$ we then get a way to differentiate on $M$:
-$
-  evaluated(dv(f, x^mu))_p equiv evaluated(dv((f compose phi.alt^(-1)), x^mu))_(phi.alt(p))
-$
-we would prefer this be coordinate independent.
+We denote the set of all diffeomorphisms $f : M -> M$ by $"Diff"(M)$, this is a group. Let $p$ be a point in a chart $(U,phi)$ such that $phi(p) = x^mu (p)$. Under $f in "Diff"(M)$ the point $p$ is mapped to $f(p)$ with coordinate $phi(f(p)) = y^mu (f(p))$ under the assumption that $f(p) in U$. The function $y$ is differentiable. This is what we call an active coordinate transformation. We could also consider two charts $(U,phi)$ and $(V,psi)$ with $U inter V eq.not emptyset$. Then we have two sets of coordinate values $x^mu = phi(p)$ and $y^mu = psi(p)$ for $p in U inter V$. The map $x |-> y$ is differentiable due to the smoothness of the manifold. This reparametrization is what we call a passive transformation. The group of all reparametrizations is $"Diff"(M)$.
 
 == Tangent vectors
-We consider smooth functions over a manifold $M$ and we denote the set of all smooth functions by $C^oo (M)$.
+We are primarily interested in two mappings: curves and functions. An open curve is a map $c : (a,b) -> M$ with $a < 0 < b$, if it is closed it is the map $c: S^1 -> M$. On a chart $(U,phi)$ a curve $c(t)$ has the presentation $x = phi compose c : RR -> RR^m$. A function $f$ on $M$ is a smooth map $f: M -> RR$. On a chart $(U,phi)$ the presentation is $f(p) = f compose phi^(-1) : RR^m -> RR$. The set of smooth functions on $M$ is denoted by $cal(F) (M)$.
 
-#def[Tangent vector][
-  A tangent vector $X_p$ is an object that differentiates functions at a point $p in M$. In particular $X_p : C^oo (M) -> RR$ obeying:
+Let $c: (a,b) -> M$ be a curve with $c(0) = p$. For any smooth $f : M -> RR$ with $t = 0 in (a,b)$,
+$
+  evaluated(dv(f(c(t)), t))_(t=0) &=^("local" #linebreak() "coordinate") evaluated(pdv((f compose phi^(-1) (x)), x^mu))_(x = phi(p)) evaluated(dv(x^mu (c(t)), t))_(t=0) \
+  &= pdv(f, x^mu) evaluated(dv(x^mu (c(t)), t))_(t=0)
+$
+where $phi$ is a chart with coordinates $x^mu$. Define
+$
+  X^mu equiv evaluated(dv(x^mu (c(t)), t))_(t=0)
+$
+then
+$
+  evaluated(dv(f(c(t)), t))_(t=0) = X^mu pdv(f, x^mu) equiv X [f]
+$
+we call $X$ the tangent vector to $M$ at $p = c(0)$.
 
-  1. Linearity: $X_p (f+g) = X_p (f) + X_p (g)$ for all $f, g in C^oo (M)$.
+As an example take the coordinate functions $phi(c(t)) = x^mu (t)$,
+$
+  X[x^mu] & = X^mu pdv(x^mu, x^nu) = X^nu delta_nu^mu = X^mu
+$
+this is the $mu$th component of the velocity vector if $t tilde "time"$.
 
-  2. $X_p (f) = 0$ when $f$ is the constant function.
+If two curves $c_1 (t)$ and $c_2 (t)$ satisfy
 
-  3. Leibnizarity (the product rule): $X_p (f g) = f(p) X_p (g) + X_p (f) g(p)$ for all $f, g in C^oo (M)$.
+$
+  c_1 (0) = c_2 (0) = p " and " evaluated(dv(x^mu (c_1 (t)), t))_(t = 0) = evaluated(dv(x^mu (c_2 (t)), t))_(t=0)
+$
+then they give the same $X$. We define this to be an equivalence relation $c_1 (t) tilde c_2 (t)$. And we identify $X$ with the equivalence class $[c(t)]$. All equivalence classes at $p in M$ form a vector space, the tangent space denoted by $T_p M$.
 
-]
-
-2. and 3. combine giving: $X_p (a f) = a X_p (f)$ for $a in RR$. Tangent vectors tell us how things change in a given directions---by differentiating.
-
-An example of a tangent vector is
+Clearly $e_mu = partial\/dd(x^mu, d: partial)$ are basis vectors of $T_p M$ and $dim T_p M = dim M$. The basis $\{e_mu\}$ is called the coordinate basis, and any vector $V in T_p M$ can be written as $V = V^mu e_mu$ with $V^mu$ being the components. By definition any vector $X$ exists without specifying coordinates, but this is convenient to do. Then we should also be able to figure out how the components transform. Let $p in U_i inter U_j$ and $x = phi_i (p)$, $y = phi_j (p)$ then for any $X in T_p M$ we can write
 $
-  evaluated(partial_mu)_p equiv evaluated(pdv(, x^mu))_p
+  X = X^mu pdv(, x^mu) = tilde(X)^mu = pdv(, y^mu)
 $
-which acts on functions as above.
-
-#proof[
-  For 1:
-  $
-    evaluated(partial_mu (f + g))_p &= evaluated(pdv(, x^mu) ((f + g)compose phi.alt^(-1)))_(phi.alt(p)) \
-    &= evaluated(pdv(, x^mu) (f compose phi.alt^(-1)))_phi.alt(p) + evaluated(pdv(, x^mu) (g compose phi.alt^(-1)))_phi.alt(p) \
-    &= evaluated(partial_mu f)_p + evaluated(partial_mu g)_p
-  $
-  and 2:
-  $
-    evaluated(partial_mu c)_p &= evaluated(pdv(, x^mu) overbrace((c compose phi.alt^(-1)), "still constant"))_phi.alt(p) \
-    &= 0
-  $
-  and 3:
-  $
-    evaluated(partial_mu (f g))_p &= evaluated(pdv(, x^mu) ((f g) compose phi.alt^(-1)))_phi.alt(p) \
-    &= evaluated(pdv(, x^mu) (f compose phi.alt^(-1))(g compose phi.alt^(-1)))_phi.alt(p) \
-    &= evaluated(pdv((f compose phi.alt^(-1)), x^mu))_phi.alt(p) (g compose phi.alt^(-1)) (phi.alt (p)) + (f compose phi.alt^(-1)) (phi.alt(p)) evaluated(pdv((g compose phi.alt^(-1)), x^mu))_phi.alt(p) \
-    &= evaluated(partial_mu f)_p g(p) + f(p) evaluated(partial_mu g)_p
-  $
-  so $evaluated(partial_mu)_p$ is a tangent vector.
-]
-
-#thm[
-  The set of all tangent vectors at a point $p$ form an $n$-dimensional vector space. We call this the tangent space $T_p (M)$. The tangent vectors $evaluated(partial_mu)_p$ provide a basis for $T_p (M)$, meaning we can write any tangent vector as
-  $
-    X_p = X^mu evaluated(partial_mu)_p "with" X^mu = X_p (x^mu)
-  $
-]
-
-#proof[
-  We being by defining $F = f compose phi.alt^(-1) : U -> RR$ with $phi.alt = (x^1, dots, x^n)$ a chart on a neighbourhood of $p$. Then in some neighbourhood of $p$ we can always write
-  $
-    F(x) = F(x^mu (p)) + (x^mu - x^mu (p)) F_mu (x)
-  $
-  where we introduce $n$ new functions $F_mu (x)$ (basically Taylor expansion). Acting with $partial_mu$ on both sides and evaluating at $x^mu = x^mu (p)$ we find
-  $
-    evaluated(pdv(F, x^mu))_x(p) = F_mu (x(p))
-  $
-  Now we define $n$ functions on $M$ by $f_mu = F_mu compose phi.alt$. Then for any $q in M$ the above becomes
-  $
-    f compose underbrace(phi.alt^(-1) (x^mu (q)), q) = f compose underbrace(phi.alt^(-1) (x^mu (p)), p) + (x^mu (q) - x^mu (p)) [f_mu compose underbrace(phi.alt^(-1) (x^mu (q)), q)]
-  $
-  so in the neighbourhood of $p$ we can write
-  $
-    f(q) = f(p) + (x^mu (q) - x^mu (p)) f_mu (q)
-  $
-  and at $q = p$:
-  $
-    f_mu (p) = F_mu compose phi.alt(p) = F_mu (x(p)) = evaluated(pdv(F, x^mu))_x(p) = evaluated(pdv(f, x^mu))_p
-  $
-  the tangent vecotr $X_p$ acts on $f$ as
-  $
-    X_p (f) &= X_p (f(p)+(x^mu - x^mu (p))f_mu) \
-    &= X_p underbrace((f(p)), "constant") + X_p (x^mu-underbrace(x^mu (p), "constant")) f_mu (p) + underbrace((x^mu (p)-x^mu (p)), 0)X_p (f_mu) \
-    &= X_p (x^mu) evaluated(pdv(f, x^mu))_p
-  $
-  meaning the tangent vector can be written as
-  $
-    X_p = X^mu evaluated(pdv(, x^mu))_p
-  $
-  these are a basis for $T_p (M)$ since they span the space, and are linearly independent---suppose we have $alpha = evaluated(alpha_mu partial_mu)_p = 0$ then acting on $f = x^nu$ gives $a(x^nu) = a_mu evaluated(partial_mu x^nu)_p = alpha_nu = 0$
-
-]
-
-A given tangent vector $X_p$ exists independent of coordinate choice, but the basis above: ${evaluated(partial_mu)_p}$ clearly depends on our choice of coordinates through $phi.alt$ and $x^mu$. Any such basis is called a coordinate basis. Other bases ${e_mu}$ are not defined like this, and a therefore called non-coordinate bases.
-
-=== Change of basis
-We could pick some other $tilde(phi.alt)$ with $tilde(x)^mu$ then
+so the components are related by
 $
-  X_p = X^mu evaluated(pdv(, x^mu))_p = tilde(X)^mu evaluated(pdv(, tilde(x)^mu))_p
+  tilde(X)^mu = X^nu pdv(y^mu, x^nu)
 $
-by the chain rule we can write
-$
-  X_p (f) = X^mu evaluated(pdv(f, x^mu))_p = X^mu evaluated(pdv(tilde(x)^nu, x^mu))_phi.alt(p) evaluated(pdv(f, tilde(x)^nu))_p
-$
-this can be considered a change in the basis vectors by
-$
-  evaluated(pdv(, x^mu))_p = evaluated(pdv(tilde(x)^nu, x^mu))_phi.alt(p) evaluated(pdv(, tilde(x)^nu))_p
-$
-or as a change in the components of the vector by
-$
-  tilde(X)^nu = X^mu evaluated(pdv(tilde(x)^nu, x^mu))_phi.alt(p)
-$
-components that transform like this are called contravariant.
-
-== Vector fields
-A vector field $X$ is defined to be a smooth assignment of a tangent vector $X_p$ to each point $p in M$---so giving a function to a vector field gives back the differentiation of this function. Meaning $X:C^oo (M) -> C^oo (M)$ defined by
-$
-  (X(f))(p)=X_p (f)
-$
-the space of all vector fields on $M$ is denoted $cal(X)(M)$.
-
-We can write the vector field as
-$
-  X = X^mu pdv(, x^mu)
-$
-with $X^mu$ being smooth functions on $M$.
-
-=== Commutator
-Consider two vector fields $X, Y in cal(X) (M)$. Then
-$
-  X Y (f g) & = X (f Y(g) + Y(f) g) \
-            & = X(f) Y(g) + f X Y (g) + g X Y (f) + X (g) Y (f) \
-            & eq.not f X Y (g) + g X Y (f)
-$
-so $X Y$ is not a vector field. But we can take the commutator
-$
-  [X,Y] (f) = X(Y(f))-Y(X(f))
-$
-or Lie bracket and this is a vector field. It can be written as
-$
-  [X,Y] (f) &= X^mu pdv(, x^mu) (Y^nu pdv(f, x^nu)) - Y^mu pdv(, x^mu) (X^nu pdv(f, x^nu)) \
-  &= (X^mu pdv(Y^nu, x^mu)- Y^mu pdv(X^nu, x^mu)) pdv(f, x^nu)
-$
-for all $f in C^oo (M)$ so we can write
-$
-  [X,Y] = (X^mu pdv(Y^nu, x^mu) - Y^mu pdv(X^nu, x^mu)) pdv(, x^nu)
-$
-and one can check that the Jacobi identity is satisfied
-$
-  [X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]]=0
-$
-which ensures that the set of all vector fields on a manifold $M$ is a Lie algebra.
-
-== Lie derivative
-Above we saw how to differentiate a function by introducing the vector field $X$, and treating $X(f)$ as the derivative of $f$ along the direction of $X$. We would like to know how to differentiate a vector field. So how can we differentiate a vector field $Y$ in the direction of $X$?
-
-=== Push-forward and pull-back
-Suppose we have a diffeomorphism $phi : M -> N$ between two manifolds $M$ and $N$. Then we can import structures between the manifolds.
-
-Take a function $f : N -> RR$ then we can construct a new function $(phi^* f) : M -> RR$ where
-$
-  (phi^* f) (p) = f compose phi.alt (p) = f(phi.alt(p)) \
-$
-and
-$
-  phi^* : T_phi(p) (M) -> T_p (M)
-$
-so we drag objects defined on $N$ onto $M$ and denote this map by the pull-back. Introducing $x^mu$ on $M$ and $y^alpha$ on $N$, then $phi (x) = y^alpha (x)$ and
-$
-  (phi^* f)(x) = f(y(x))
-$
-
-Analogously we can go the other way: given a vector field $Y$ on $M$, we can define a new vector field ($phi_* Y$) on $N$. If we have a function $f:N -> RR$ then the vector field $(phi_* Y)$ on $N$ acts as
-$
-  (phi_* Y) (f) = Y(phi^* f)
-$
-and
-$
-  phi_* : T_p (M) -> T_phi(p) (M)
-$
-using the map to push objects on $M$ onto $N$ is called the push-forward---the push-forward is the action of $Y$ on the pull-back of $f$.
-
-With $Y = Y^mu partial\/partial x^mu$ being the vector field on $M$ we can write the vector field on $N$ as
-$
-  (phi_* Y) (f) = Y^mu pdv(f(y(x)), x^mu) = Y^mu pdv(y^alpha, x^mu) pdv(f(y), y^alpha)
-$
-or componentwise
-$
-  (phi_* Y)^alpha = Y^mu pdv(y^alpha, x^mu)
-$
-
-=== The Lie derivative
-Diffeomorphisms and coordinate transformations turn out to be two sides of the same coin. Consider a manifold $M$ with $x^mu : M -> RR$, to change coordinates we can introduce new functions $y^alpha : M -> RR$ or we could introduce a diffeomorphism $phi : M -> M$, after which the coordinates would be the pull-backs $(phi^* x)^mu : M -> RR^n$.
-
-This is useful because it allows us to compare tangent vectors at different points (from different tangent spaces). By forming the difference between the tangent vector  at some point $p$ and the pull-back---the value at $phi (p)$ pulled back to $p$. This leads to the construction of a new differential operator: the Lie derivative. To do this we consider a one-parameter family of diffeomorphisms $sigma_t: RR times M -> M$ such that for each $t in RR$ the $sigma_t$ is a diffeomorphism and $sigma_s compose sigma_t = sigma_(s + t)$. These arise naturally from vector fields. If we consider what happens to a point $p$ under all $sigma_t$ then we get a curve in $M$, and this happens for every point $p in M$. Then we can define a vector field $X$ to be the set of tangent vectors to each of these curves at every point, for $t = 0$. We can also reverse this to define a family of diffeomorphisms from any vector field. We define the curves of the vector field to be those that solve
-$
-  dv(x^mu (sigma_t), t) = X^mu (x) =>^"infinitesimal" x^mu (t) = x^mu (0) + t X^mu (x) + cal(O)(t^2)
-$
-we refer to $sigma_t$ as the _flow_ since $x^mu (t) = x^mu (sigma_t (p))$ and $X$ as the _generator_. Then we can consider how fast a tangent vector changes along these curves. We can define this change by
-$
-  Delta_t Y_p = ((sigma_(-t))_* Y_(sigma_t (p)))_p - Y_p
-$
-
-#figure(
-  image("liederiv.png", width: 60%),
-  caption: [Construction of the Lie derivative---taken from Tong.],
-)
-
-We now define the Lie derivative of $Y$ along $X$ as
-$
-  cal(L)_X Y = lim_(t -> 0) (Delta_t Y_p)/t
-$
-where $X = X^mu partial_mu$ and $Y = Y^mu partial_mu$ are vector fields on $M$. The flow of $X$ is $sigma_t : M -> M$ which moves points along curves of $X$. Before tackling this guy consider a normal function, in this case
-$
-  cal(L)_X f = lim_(t -> 0) (f(sigma_t (x))- f(x))/t = evaluated(dv(f(sigma_t (x)), t))_(t = 0) = pdv(f, x^mu) evaluated(dv(x^mu, t))_(t=0) = X^mu (x) pdv(f, x^mu) = X(f)
-$
-so $cal(L)_X f = X (f)$! Now for a vector field $Y$ we have
-$
-  cal(L)_X Y & = cal(L)_X (Y^mu partial_mu) \
-             & = (cal(L)_X Y^mu) partial_mu + Y^mu (cal(L)_X partial_mu)
-$
-we just found the first term since $Y^mu$ is a function. We still need the second
-$
-  cal(L)_X partial_mu = lim_(t-> 0) ((sigma_(-t))_* partial_mu - partial_mu)/t
-$
-we compute (for $y^alpha -> x^mu (t)$ where $x^mu (t)$ is the infinitesimal coordinate change induced by $sigma_(-t) => x^mu (t) = x^mu (0) - t X^mu + cal(O)(t^2)$)
-$
-  (sigma_(-t))_* partial_mu &= underbrace((delta_mu^nu - t pdv(X^nu, x^mu)+ dots), "Jacobian") partial_nu \
-  &= partial_mu - t pdv(X^nu, x^mu) partial_nu + dots
-$
-giving
-$
-  cal(L)_X partial_mu = - pdv(X^nu, x^mu) partial_nu
-$
-so
-$
-  cal(L)_X Y & = X^nu pdv(Y^mu, x^nu) partial_mu -Y^mu pdv(X^nu, x^mu) partial_nu \
-             & = [X,Y]
-$
-so the Lie derivative acting on vector fields is the commutator! By the Jacobi identity it follows
-$
-  cal(L)_X cal(L)_Y Z - cal(L)_Y cal(L)_X Z = cal(L)_([X,Y]) Z
-$
-
-#pagebreak()
-= Tensors
-For any vector space $V$, the dual vector space $V^*$ is the space of all linear maps from $V$ to $RR$. A typical example is the Hilbert space $cal(H) = V$ with $ket(psi) in cal(H)$. The dual to this is the Hilbert space with bras $bra(phi) in cal(H)^*$, where the map $bra(phi): cal(H) -> RR$ is defined by the braket $braket(phi, psi)$.
-
-In general suppose we have a basis ${e_mu\, mu=1\, dots\, n}$ of $V$. Then we introduce a dual basis ${f^mu\, mu = 1\, dots\, n}$ for $V^*$ defined by
-$
-  f^nu (e_mu) = delta_mu^nu
-$
-then any vector in $V$ can be written as $X = X^mu e_mu$ and $f^nu (X) = X^mu f^nu (e_mu) = X^nu$. Given any basis this construction provides an isomorphism between $V$ and $V^*$ by $e_mu -> f^mu$ (dependent on the basis). We can repeat this construction to find $(V^*)^*$ but this space is naturally isomorphic to $V$ meaning the isomorphism is independent of how we choose our basis. To see this consider $X in V$ and $omega in V^*$ then $omega(X) in RR$. But we can also consider $X in (V^*)^*$ and define $X(omega) equiv omega(X) in RR$. In this sense $(V^*)^* = V$.
+this ensures the vector is invariant.
 
 == One-forms
-To every point $p in M$ we have a vector space $T_p (M)$. The dual to the space $T_p^* (M)$ is the cotangent space at $p$ and we call its elements for cotangent vectors or covectors. Given a basis ${e_mu}$ of $T_p (M)$ we introduce the dual basis ${f^mu}$ for $T_p^* (M)$ and write any covector as $omega = omega_mu f^mu$.
+Since $T_p M$ is a vector space it has a dual vector space with elements being maps $omega:T_p M -> RR$. We call this the cotangent space at $p$ and denote it by $T_p^*M$. Any $omega in T_p^* M$ is called a cotangent vector (covector) or one-form.
 
-We can contruct fields of covectors by picking a member of $T_p^* (M)$ for each point $p$ smoothly---similarly as to how we did for vectors by assigning members of $T_p (M)$ to each point. These cotangent fields are called one-forms. At each $p in M$ a one-form $omega$ assigns to each $X_p in T_p (M)$ a real number $omega_p (X_p)$ smoothly. The set of all such one-forms on $M$ are denoted by $Lambda^1 (M)$.
+The simplest example is the differential $dd(f)$ with $f in cal(F) (M)$. The action of a vector $V$ on $f$ is $V[f] = V^mu dd(f, d: partial)\/dd(x^mu, d: partial) in RR$. Then the action of $dd(f) in T_p^* M$ on $V in T_p M$ is defined by
+$
+  innerproduct(dd(f), V) equiv V[f] = V^mu pdv(f, x^mu) in RR
+$
+This is $RR$-linear in $V$ and $f$.
 
-There is a simple way to construct such one-forms: consider a function $f in C^oo (M)$ and define $dd(f) in Lambda^1 (M)$
+Consider $f = x^mu$ and $V = partial\/dd(x^mu, d: partial)$ then
 $
-  dd(f) (X) = X (f)
+  innerproduct(dd(x^mu), pdv(, x^nu)) = pdv(x^mu, x^nu) = delta_nu^mu
 $
-so it is a map taking $X_p in T_p (M)$ and returning the derivative of $f$ in the $X_p$ direction, a number $in RR$. We can use this to build a basis for $Lambda^1 (M)$. We introduce coordinates $x^mu$ on $M$ with the basis $e_mu = partial\/dd(x^mu, d: partial) equiv partial_mu$ of vector fields. Then we take functions $f = x^mu$ giving
-$
-  dd(x^mu) (partial_nu) = partial_nu (x^mu) = delta_nu^mu
-$
-so $f^mu = dd(x^mu)$ is a basis for $Lambda^1 (M)$ by definition, dual to the coordinate basis $partial_mu$. So any arbitrary one-form $omega in Lambda^1 (M)$ can be written as
-$
-  omega = omega_mu dd(x^mu)
-$
-in this basis the one-form $dd(f)$ takes the form
+so $f^mu = dd(x^mu)$ provides a basis for $T_p^* M$, and any one-form can be written as $omega = omega_mu dd(x^mu)$. In this basis we can write
 $
   dd(f) = pdv(f, x^mu) dd(x^mu)
 $
 since
 $
-  dd(f) (X) = pdv(f, x^mu) dd(x^mu) (X^nu partial_nu) =^"linearity" pdv(f, x^mu) X^nu underbrace(dd(x^mu) (partial_nu), delta_nu^mu) = X^mu pdv(f, x^mu) = X (f)
+  innerproduct(dd(f), V) = innerproduct(pdv(f, x^mu) dd(x^mu), V^nu pdv(, x^nu)) = pdv(f, x^mu) V^nu innerproduct(dd(x^mu), pdv(, x^nu)) = V^mu pdv(f, x^mu) = V[f]
 $
-this is nice!
+Similarly given a vector $V = V^mu partial_mu$ and a one-form $omega = omega_mu dd(x^mu)$ we define the inner product $innerproduct(dot, dot) : T_p^* M times T_p M -> RR$ by
+$
+  innerproduct(omega, V) = omega_mu V^nu innerproduct(dd(x^mu), partial_nu) = omega_mu V^nu delta_nu^mu = omega_mu V^mu
+$
+which is familiar.
 
-What happens now when we switch coordinates. Given two charts $phi.alt = (x^1\, dots\, x^n)$ and $tilde(phi.alt) = (tilde(x)^1\, dots\, tilde(x)^n)$ we know the basis for the vector fields changes as
+Let $p in U_i inter U_j$ then
 $
-  pdv(, tilde(x)^mu) = pdv(x^nu, tilde(x)^mu) pdv(, x^nu)
+  omega = omega_mu dd(x^mu) = tilde(omega)_nu dd(y^nu)
 $
-the basis of one-forms should transform inversely of this
+with $x = phi_i (p)$ and $y = phi_j (p)$. From $dd(y^nu) = (dd(y^nu, d: partial)\/dd(x^mu, d: partial)) dd(x^mu)$ we find
 $
-  dd(tilde(x)^mu) = pdv(tilde(x)^mu, x^nu) dd(x^nu)
+  tilde(omega)_nu = omega_mu pdv(x^mu, y^nu)
 $
-then
-$
-  dd(tilde(x)^mu) (pdv(, tilde(x)^nu)) &= pdv(tilde(x)^mu, x^rho) dd(x^rho) (pdv(x^sigma, tilde(x)^nu) pdv(, x^sigma)) \
-  &= pdv(tilde(x)^mu, x^rho) pdv(x^sigma, tilde(x)^nu) dd(x^rho) (pdv(, x^sigma)) \
-  &= pdv(tilde(x)^mu, x^rho) pdv(x^sigma, tilde(x)^nu) delta_sigma^rho \
-  &= delta_nu^mu
-$
-as we would expect. Then we can write
-$
-  omega = omega_mu dd(x^mu) = tilde(omega)_mu dd(tilde(x)^mu) "with" tilde(omega)_mu = pdv(x^nu, tilde(x)^mu) omega_nu
-$
-components transforming in this way are covariant---previously we saw that components of tangent vectors transform contravariantly:
-$
-  tilde(X)^nu = pdv(tilde(x)^nu, x^mu) X^mu
-$
-it should be clear that these transform oppositely---and note that these are essentially the simplest things we are allowed to write.
+which is nice.
 
-=== Lie derivative
-Under a map $phi : M -> N$ we saw that a vector field $X$ on $M$ can be push-forwarded to a vector field $phi_* X$ on $N$. One-forms go the other way: given a one-form $omega$ on $N$ we can pull-back this to a one-form $phi^* omega$ on $M$, defined by
+== Tensors
+A tensor of type $(q,r)$ is a multi-linear object which maps $q$ elements of $T_p^* M$ and $r$ elements of $T_p M$ to a real number. The set of type $(q,r)$ tensors at $p in M$ is denoted by $cal(T)^q_(r,p) (M)$. Any element of $cal(T)^q_(r,p) (M)$ can be written in terms of the bases mentioned above,
 $
-  (phi^* omega) (X) = omega (phi_* X)
+  T = tensor(T, mu_1 dots mu_q, -nu_1 dots nu_r) partial_mu_1 dots partial_mu_q dd(x^(nu_1)) dots dd(x^(nu_r))
 $
-introducing $x^mu$ on $M$ and $y^alpha$ on $N$ then
+clearly this is a linear function $ T: times.circle^q T_p^* M times.circle^r T_p M -> RR $ Defining $V_i equiv V_i^mu partial_mu$ and $omega_i = omega_(i mu) dd(x^mu)$ then the action of $T$ gives a number
 $
-  (phi^* omega)_mu = omega_alpha pdv(y^alpha, x^mu)
+  T (omega_1, dots, omega_q; V_1, dots, V_r) = tensor(T, mu_1 dots mu_q, -nu_1 dots nu_r) omega_(1 mu_1) dots omega_(q mu_q) V_1^(nu_1) dots V_r^(nu_r)
 $
-we now define the Lie derivative $cal(L)_X$ acting on one-forms. Again $X$ generates a flow $sigma_t : M -> M$, and using the pull-back allows us to compare one-forms at different points. We denote the covector $omega(p)$ as $omega_p$. Then the Lie derivative is defined as
+Given a basis $\{e_mu}$ and its dual $\{f^mu}$ we can then extract the components by
 $
-  cal(L)_X omega = lim_(t -> 0) ((sigma_t^* omega)_p - omega_p)/t
+  tensor(T, mu_1 dots mu_q, -nu_1 dots nu_r) = T(f^(mu_1), dots, f^(mu_q);e_(nu_1), dots, e_(nu_r))
 $
-the infinitesimal map $sigma_t$ acts on coordinates as $x^mu (t) = x^mu (0) + t X^mu + cal(O) (t^2)$ (this is the coordinate change) so the pull-back of a basis vector $dd(x^mu)$ is
+As a simple example consider a type $(2,1)$ tensor
 $
-  sigma_t^* dd(x^mu) = underbrace((delta_nu^mu + t pdv(X^mu, x^nu) + dots), "Jacobian") dd(x^nu)
+  T(omega, eta, X) = T(omega_mu f^mu, eta_nu f^nu, X^rho e_rho) = omega_mu eta_nu X^rho T(f^mu,f^nu,e_rho) = tensor(T, mu nu, -rho) omega_mu eta_nu X^rho
 $
-then we have
+Every manifold also has a natural type $(1,1)$ tensor called $delta$. This takes a one-form $omega$ and a tangent vector $X$ and gives a real number
 $
-  cal(L)_X (dd(x^mu)) = pdv(X^mu, x^nu) dd(x^nu)
-$
-and for a general one-form
-$
-  cal(L)_X omega &= (cal(L)_X omega_mu) dd(x^mu) + omega_nu cal(L)_X (dd(x^nu)) \
-  &= X^nu partial_nu omega_mu + omega_nu partial_mu X^nu) dd(x^mu)
-$
-
-== Tensor fields
-A tensor of rank $(r,s)$ at a point $p in M$ is defined to be a multi-linear map
-$
-  T: underbrace(T_p^* (M) times dots times T_p^* (M), r "times") times underbrace(T_p (M) times dots times T_p (M), s "times") -> RR
-$
-it has total rank $r+s$.
-
-Evidently a covector in $T_p^* (M)$ is a tensor of rank $(0, 1)$ while a tangent vector in $T_p (M)$ is a tensor of rank $(1,0)$.
-
-As before we define a tensor field to be a smooth assignment of an $(r,s)$ tensor to every point $p in M$: $p |->^"smooth" T_p$.
-
-With a basis ${e_mu}$ for vector fields and a dual basis ${f^mu}$ for one-forms, the components of a tensor are defined to be
-$
-  tensor(T, mu_1 dots mu_r, -nu_1 dots nu_s) = T (f^(mu_1), dots , f^(mu_r), e_(nu_1), dots, e_(nu_s))
-$
-on a manifold of dimension $n$ there are $n^(r+s)$ components---for a tensor field each of these is a function over $M$.
-
-Take a rank $(2,1)$ tensor as an example. This takes two one-forms $omega$ and $eta$ together with a vector field $X$, eventually spitting out a real number. This is
-$
-  T(omega, eta, X) = T(omega_mu f^mu, eta_nu f^nu, X^rho e_rho) =^"multi-linear" omega_mu eta_nu X^rho T(f^mu, f^nu, e_rho) = tensor(T, mu nu, -rho) omega_mu eta_nu X^rho
-$
-every manifold comes with a natural $(1,1)$ tensor called $delta$. This takes a one-form $omega$ and a vector field $X$ giving a real number. In components:
-$
-  delta(omega, X) = omega(X) => delta(f^mu, e_nu) = f^mu (e_nu) = delta_nu^mu
+  delta (omega, X) = omega (X) => delta(f^mu, e_nu) = f^mu (e_nu) = delta_nu^mu
 $
 which is just the Kronecker delta.
 
-We can again consider how these objects transform (how their components transform). Consider two bases for the vector fields ${e_mu}$ and ${tilde(e)_mu}$ related by
+Consider two bases $\{e_mu}$ and $\{tilde(e)_mu}$ related by
 $
   tilde(e)_nu = tensor(A, mu, -nu) e_mu
 $
-for some invertible matrix $A$. The dual bases ${f^mu}$ and $tilde(f)^mu}$ are then related by
+with $A$ invertible. Let $\{f^mu}$ and $\{tilde(f)^mu}$ be the respective dual bases related by
 $
   tilde(f)^rho = tensor(B, rho, -sigma) f^sigma
 $
-such that
+then we require
 $
-  tilde(f)^rho (tilde(e)_nu) = tensor(A, mu, -nu) tensor(B, rho, -sigma) f^sigma (e_mu) = tensor(A, mu, -nu) tensor(B, rho, -mu) =^! delta_nu^rho => tensor(B, rho, -mu) = tensor((A^(-1)), rho, -mu)
+  tilde(f)^rho (tilde(e)_nu) = tensor(B, rho, -sigma) tensor(A, mu, -nu) f^sigma (e_mu) = tensor(A, mu, -nu) tensor(B, rho, -mu) =^! delta^rho_nu => tensor(B, rho, -mu) = tensor((A^(-1)), rho, -mu)
 $
-so the lower components transform by multiplying with $A$, and the upper components transform by multiplying with $B = A^(-1)$. So a rank $(1,2)$ tensor would transform as
+so lower components transform using $A$ while upper components transform using $B = A^(-1)$. As an example take a type $(1,2)$ tensor
 $
-  tensor(tilde(T), mu, -rho nu) = tensor(B, mu, -sigma) tensor(A, tau, -rho) tensor(A, lambda, -nu) tensor(T, sigma, -tau lambda)
-$
-Changing between coordinate bases we have
-$
-  underbrace(tensor(A, mu, -nu) = pdv(x^mu, tilde(x)^nu), "covariant") "and" underbrace(tensor(B, mu, -nu) = tensor((A^(-1)), mu, -nu) = pdv(tilde(x)^mu, x^nu), "contravariant")
-$
-which is what we found previously.
-
-=== Operations on tensor fields
-We can do stuff on tensor fields to generate new tensors.
-
-We can add and subtract tensor fields, or multiply them by functions. This is what it means when we say the set of tensors at a point $p in M$ forms a vector space. We can also multiply tensors to give different types of tensors. Given a tensor $S$ of rank $(p,q)$ and a tensor $T$ of rank $(r,s)$ we can form the tensor product $S times.circle T$ which is a new tensor of rank $(p+r,q+s)$ defined by:
-$
-  S times.circle T (omega_1, dots, omega_p, eta_1, dots, eta_r, X_1, dots, X_q, Y_1,dots, Y_s) \
-  #h(10em)= S (omega_1, dots, omega_p, X_1, dots, X_q) T(eta_1,dots,eta_r,Y_1,dots,Y_s)
-$
-so it obviously inherits multi-linearity---in terms of components:
-$
-  tensor((S times.circle T), mu_1 dots mu_p nu_1 dots nu_r, -rho_1 dots rho_q sigma_1 dots sigma_s) = tensor(S, mu_1 dots mu_p, -rho_1 dots rho_q) tensor(T, nu_1 dots nu_r, -sigma_1 dots sigma_s)
+  tensor(tilde(T), mu, - rho nu) = tensor(B, mu, -sigma) tensor(A, tau, -rho) tensor(A, lambda, -nu) tensor(T, sigma, -tau lambda)
 $
 
-We can also construct a tensor of lower rank $(r-1,s-1)$ by contraction. To do this we replace any $T_p^* (M)$ entry with $f^mu$ and the corresponding $T_p (M)$ entry with $e_mu$ and then sum over $mu$. So we can construct a rank $(1,0)$ tensor $S$ from a rank $(2,1)$ tensor $T$ by
-$
-  S(omega) = T(omega, f^mu, e_mu)
-$
-alternatively we can contract the other component giving a typically different rank $(1,0)$ tensor $S' (omega) = T(f^mu,omega, e_mu)$. In terms of components we equate an upper and lower index and then sum over them:
-$
-  S^mu = tensor(T, mu nu, -nu) "and" S'^mu = tensor(T, nu mu, -nu)
-$
-We can also symmetrize or anti-symmetrize tensors, take for example a rank $(0,2)$ tensor $T$
-$
-  T_((mu nu)) = S_(mu nu) = 1/2 (T_(mu nu) + T_(nu mu)) " and " T_([mu nu])=A_(mu nu) = 1/2 (T_(mu nu) -T_(nu mu))
-$
-this idea generalizes to other tensors:
-$
-  tensor(T, (mu nu) rho, -sigma) = 1/2 (tensor(T, mu nu rho, -sigma) + tensor(T, nu mu rho, -sigma))
-$
-or we can symmetrize and anti-symmetrize over more indices (provided they are all upper or lower indices):
-$
-  tensor(T, mu, -(nu rho sigma)) &= 1/3! (tensor(T, mu, -nu rho sigma) + tensor(T, mu, -rho nu sigma) + tensor(T, mu, -rho sigma nu) + tensor(T, mu, -sigma rho nu) + tensor(T, mu, -sigma nu rho) + tensor(T, mu, -nu sigma rho)) \
-  tensor(T, mu, -[nu rho sigma]) &= 1/3! (tensor(T, mu, -nu rho sigma) - tensor(T, mu, -rho nu sigma) + tensor(T, mu, -rho sigma nu) - tensor(T, mu, -sigma rho nu) + tensor(T, mu, -sigma nu rho) - tensor(T, mu, -nu sigma rho))
-$
-Given any smooth tensor field $T$ we can also always take the Lie derivative with respect to a vector field $X$. We saw above how under a map $phi:M -> N$ vector fields are pushed forwards while one-forms are pulled back. In general for a mixed tensor this leaves confusion about which way to go. But if $phi$ is a diffeomorphism we also have $phi^(-1) : N -> M$ allowing us to define the push-forward of a tensor $T$ from $M -> N$. This acts on one-forms $omega in Lambda^1 (N)$ and vector fields $X in cal(X) (N)$ and is given by
-$
-  (phi_* T) (omega_1, dots, omega_r, X_1, dots, X_s) = T(phi^* omega_1, dots, phi^* omega_r, (phi_*^(-1) X_1), dots, (phi_*^(-1) X_s))
-$
-the $phi^* omega$ are pull-backs of $omega$ from $N$ to $M$, and $phi_*^(-1) X$ are push-forwards of $X$ from $N$ to $M$. The Lie derivative is then defined:
-$
-  cal(L)_X T = lim_(t->0) (((sigma_(-t))_* T)_p-T_p)/t
-$
-with $sigma_t$ being the flow generated by $X$---note that this coincides with the previous definitions.
+If a vector is assigned smoothly to every point in $M$ we call it a vector field over $M$. So $V$ is a vector field if $V[f] in cal(F) (M)$ for all $f in cal(F) (M)$. The set of all such vector fields is denoted by $cal(X) (M)$. A vector field $X$ at $p in M$ is denoted by $evaluated(X)_p$ and is an element of $T_p M$. Similarly we define a tensor field of type $(q,r)$ if an element of $cal(T)^q_(r, p) (M)$ is smoothly assigned to each $p in M$. The set of such tensor fields is denoted by $cal(T)^q_r (M)$. So $cal(T)_1^0 (M) = Omega^1 (M)$ is the set of dual vector fields.
 
-#pagebreak()
-= Differential forms
+== The differential map
+A smooth map $f : M -> N$ induces a map $f_*$ called the differential map (or pushforward)
+$
+  f_* : T_p M -> T_(f(p)) N
+$
+Let $g in cal(F) (N)$ then $g compose f in cal(F) (M)$. A vector $V in T_p M$ acts on $g compose f$ to give a number $V[g compose f]$. We define $f_* V in T_(f(p)) N$ by
+$
+  (f_* V) [g] equiv V[g compose f]
+$
+in terms of charts $(U, phi)$ on $M$ and $(V,psi)$ on $N$
+$
+  (f_* V)[g compose psi^(-1)(y)] equiv V[g compose f compose phi^(-1) (x)]
+$
+with $x = phi(p)$ and $y = psi(f(p))$. Let $ V = V^mu pdv(, x^mu) " and " f_* V = W^alpha pdv(, y^alpha) $
+then
+$
+  W^alpha pdv(, y^alpha) [g compose psi^(-1) (y)] = V^mu pdv(, x^mu) [g compose f compose phi^(-1) (x)]
+$
+if $g = y^alpha$ we find
+$
+  W^alpha = V^mu underbrace(pdv(, x^mu) y^alpha (x), "Jacobian of" #linebreak() f: M -> N)
+$
+so we can write
+$
+  f_* V = V^mu pdv(y^alpha, x^mu) pdv(, y^alpha)
+$
+Let $f : M -> N$ and $g : N -> P$ then the differential map of $g compose f: M -> P$ is
+$
+  (g compose f)_* = g_* compose f_*
+$
+To see this we use $x^mu$ on $M$, $y^alpha$ on $N$ and $z^i$ on $P$. Then $g_* compose f_*$ is
+$
+  g_* (f_* V) & = V^mu pdv(y^alpha, x^mu) g_* (pdv(, y^alpha)) \
+              & = V^mu pdv(y^alpha, x^mu) (pdv(z^i, y^alpha) pdv(, z^i)) \
+              & = V^mu pdv(z^i, x^mu) pdv(, z^i) \
+              & = (g compose f)_* V
+$
+and we are done.
 
+Any map $f : M -> N$ also induces the map
+$
+  f^* : T_(f(p))^* N -> T_p^* M
+$
+which we call the pullback. Taking $V in T_p M$ and $omega in T_(f(p))^* N$ the pullback of $omega$ by $f^*$ is defined by
+$
+  innerproduct(f^* omega, V) = innerproduct(omega, f_* V)
+$
+To find the coordinate expression let $omega = omega_alpha dd(y^alpha) in T_(f(p))^* N$. Then
+$
+  innerproduct(omega_alpha dd(y^alpha), f_* V) &= omega_alpha V^mu pdv(y^alpha, x^mu) innerproduct(dd(y^alpha), pdv(, y^alpha)) \
+  &= omega_alpha V^mu pdv(y^alpha, x^mu)
+$
+if $f^* omega = xi_mu dd(x^mu) in T_p^* M$ then
+$
+  innerproduct(f^* omega, V) & = xi_mu V^mu innerproduct(dd(x^mu), pdv(, x^mu)) \
+                             & = xi_mu V^mu
+$
+so by comparison
+$
+  xi_mu = omega_alpha pdv(y^alpha, x^mu)
+$
+
+Let $f: M-> N$ and $g : N->P$ as above. Then the pullback for $g compose f : M -> P$ is
+$
+  (g compose f)^* = g^* compose f^*
+$
+As above we use $x^mu$ on $M$, $y^alpha$ on $N$ and $z^i$ on $P$. Let $eta = eta_i dd(z^i)$ be a one-form on $P$. Then
+$
+  innerproduct((g compose f)^* eta, V) &= innerproduct(eta, (g compose f)_* V) \
+  &= innerproduct(eta, g_* (f_* V)) \
+  &= innerproduct(g^* eta, f_* V) \
+  &= innerproduct((f^* compose g^* ) eta, V)
+$
+where we use $(g compose f)_* = g_* compose f_*$.
+
+Consider a type $(1,1)$ tensor on $M$
+$
+  tensor(T, mu, -nu) pdv(, x^mu) times.circle dd(x^nu)
+$
+Let $f : M -> N$ be a diffeomorphism. Then
+$
+  f_* (tensor(T, mu, -nu) pdv(, x^mu) times.circle dd(x^nu)) &= tensor(T, mu, -nu) f_* (pdv(, x^mu)) times.circle dd(x^nu) \
+  &= tensor(T, mu, -nu) pdv(y^alpha, x^mu) pdv(, y^alpha) times.circle underbrace(pdv(x^nu, y^alpha) dd(y^alpha), "change of basis") \
+  &= tensor(T, mu, -nu) pdv(y^alpha, x^mu) pdv(x^nu, y^alpha) pdv(, y^alpha) times.circle dd(y^alpha)
+$
+note that here $f_*$ only acts on vectors, for the one-forms we always just use the inverse Jacobian.
+
+== Flows
+Let $X$ be a vector field in $M$. An integral curve $x(t)$ of $X$ is a curve in $M$ whose tangent vector at $x(t)$ is $evaluated(X)_x$---so the curve $x(t)$ is tangent to $X$ at every point. For a chart $(U,phi)$ this means
+$
+  dv(x^mu, t) = X^mu (x(t))
+$
+with $x^mu (t)$ being the $mu$th component of $phi(x(t))$ and $X = X^mu partial\/dd(x^mu, d: partial)$. This is a system of differential equations which can be solved uniquely.
+
+Let $sigma (t, x_0)$ be an integral curve of $X$ which passes a point $x_0$ at $t=0$ and denote the coordinate by $sigma^mu (t,x_0)$. Then the above becomes
+$
+  dv(, t) sigma^mu (t,x_0) = X^mu (sigma(t, x_0))
+$
+with $sigma^mu (0,x_0) = x_0^mu$. The map $sigma: RR times M -> M$ is called the _flow_ generated by $X in cal(X) (M)$. The flow is the collection of all integral curves of $X$, so for each $x_0$ in $M$ $sigma(t, x_0)$ is the integral curve with $sigma(0, x_0) = x_0$. A flow satisfies
+$
+  sigma(t, sigma^mu (s,x_0)) = sigma(t+s, x_0)
+$
+To see this note
+$
+  dv(, t) sigma^mu (t, sigma^mu (s,x_0)) & = X^mu (sigma(t, sigma^mu (s,x_0))) \
+                 sigma(0, sigma(s, x_0)) & = sigma(s, x_0)
+$
+and
+$
+  dv(, t) sigma^mu (t+s,x_0) &= dv(, (t+s)) sigma^mu (t+s,x_0) = X^mu (sigma(t+s, x_0)) \
+  sigma(0+s, x_0) &= sigma(s, x_0)
+$
+then by uniqueness it follows.
+
+We have just found:
+#thm[
+  For any point $x in M$ there exists a differentiable map $sigma: RR times M -> M$ such that
+
+  1. $sigma(0, x)=x$.
+
+  2. $t |-> sigma(t, x)$ is a solution to the above.
+
+  3. $sigma(t, sigma^mu (s,x)) = sigma(t+s, x)$
+]
+
+We can treat $sigma(t, x)$ as where a particle placed at $x$ for $t = 0$ will be at time $t$.
+
+For fixed $t in RR$ the flow $sigma(t, x)$ is a diffeomorphism from $M$ to $M$ denoted by $sigma_t : M-> M$. Importantly $sigma_t$ is an Abelian group with
+
+1. $sigma_t (sigma_s (x)) = sigma_(t+s) (x)$ or $sigma_t compose sigma_s = sigma_(t+s)$.
+
+2. $sigma_0$ is the identity map.
+
+3. $sigma_(-t) = (sigma_t)^(-1)$.
+
+This group is called the one-parameter group of transformations.
+
+Consider $sigma_epsilon$ for infinitesimal $epsilon$. We find that a point $x$ with coordinate $x^mu$ is mapped to
+$
+  sigma_epsilon^mu (x) = sigma^mu (epsilon,x) = sigma^mu (0,x) + epsilon evaluated(dv(sigma^mu, epsilon))_(epsilon=0) = x^mu + epsilon X^mu (x)
+$
+to linear order in $epsilon$. In this case we call the vector field $X$ the infinitesimal generator of $sigma_t$.
+
+Given a vector field $X$ the corresponding flow $sigma$ is called the exponentiation of $X$ since
+$
+  sigma^mu (t,x) = e^(t X) x^mu
+$
+This is because we can write
+$
+  sigma^mu (t,x) &= x^mu + t evaluated(dv(, s) sigma^mu (s,x))_(s=0) + t^2/2! evaluated((dv(, s))^2 sigma^mu (s,x))_(s=0) + dots \
+  &= evaluated([1+t dv(, s) + t^2/2! (dv(, s))^2 + dots] sigma^mu (s,x))_(s=0) \
+  &equiv evaluated(exp(t dv(, s)) sigma^mu (s,x))_(s=0) = e^(t X) x^mu
+$
+The flow then satisfies
+
+1. $sigma(0, x) = x = e^(0 X) x$.
+
+2. $display(dv(sigma(t, x), t) = X e^(t X) x = dv(, t) (e^(t X) x))$.
+
+3. $sigma(t, sigma(s, x)) = sigma(t, e^(s X) x) = e^(t X) e^(s X) x = e^((t+s)X) x = sigma(t+s, x)$.
+
+== The Lie derivative
+Let $sigma(t, x)$ and $tau(t, x)$ be two flows generated by $X$ and $Y$.
+$
+  dv(sigma^mu (s,x), s) & = X^mu (sigma(s, x)) \
+    dv(tau^mu (t,x), t) & = Y^mu (tau(t, x))
+$
+we want to find the change of $Y$ along $sigma(s, x)$. To do this we need to compare the vector $Y$ at a point $x$ with $Y$ at a point $x' = sigma_epsilon (x)$. The issue is that these vectors belong to different tangent spaces $T_x M$ and $T_(sigma_epsilon (x)) M$. To solve this issue we map $evaluated(Y)_(sigma_epsilon (x))$ to $T_x M$ by the pushforward $(sigma_(-epsilon))_* : T_(sigma_epsilon (x)) M -> T_x M$. Then we can take the difference between $(sigma_(-epsilon))_* evaluated(Y)_(sigma_epsilon (x))$ and $evaluated(Y)_x$. The Lie derivative of a vector field $Y$ along the flow $sigma$ of $X$ is exactly this
+$
+  cal(L)_X Y = lim_(epsilon -> 0) ( (sigma_(-epsilon))_* evaluated(Y)_(sigma_epsilon (x)) - evaluated(Y)_x )/epsilon
+$
+as should be clear this pushing or pulling can be done in different ways
+$
+  cal(L)_X Y &= lim_(epsilon -> 0) ( evaluated(Y)_x - (sigma_epsilon)_* evaluated(Y)_(sigma_(-epsilon) (x)) )/epsilon \
+  &= lim_(epsilon -> 0) (evaluated(Y)_(sigma_epsilon (x))-(sigma_epsilon)_* evaluated(Y)_x)/epsilon
+$
+
+Let $(U,phi)$ be a chart with coordinates $x$ and let $X = X^mu partial\/dd(x^mu, d: partial)$ and $Y =Y^mu partial\/dd(x^mu, d: partial)$ be vector fields on $U$. Then $sigma_epsilon (x)$ has coordinates $x^mu + epsilon X^mu (x)$ and
+$
+  evaluated(Y)_(sigma_epsilon (x)) &= Y^mu (x^nu + epsilon X^nu (x)) evaluated(e_mu)_(x+epsilon X) \
+  &tilde.eq [Y^mu (x) + epsilon X^nu (x) partial_nu Y^mu (x)] evaluated(e_mu)_(x+epsilon X)
+$
+if we use $(sigma_(-epsilon))_*$ to map this vector to $x$ we obtain (with coordinates $x^mu - epsilon X^mu (x)$)
+$
+  & underbrace([Y^mu (x) + epsilon X^lambda (x) partial_lambda Y^mu (x)], V^mu) underbrace(partial_mu [x^nu - epsilon X^nu (x)], partial_mu y^alpha) evaluated(e_nu)_x \
+  &= [Y^mu (x) + epsilon X^lambda (x) partial_lambda Y^mu (x)][delta_mu^nu - epsilon partial_mu X^nu (x)] evaluated(e_nu)_x \
+  &= Y^mu (x) evaluated(e_mu)_x + epsilon [X^mu (x) partial_mu Y^nu (x) - Y^mu (x) partial_mu X^nu (x)] evaluated(e_nu)_x + cal(O)(epsilon^2)
+$
+giving
+$
+  cal(L)_X Y = (X^mu partial_mu Y^nu - Y^mu partial_mu X^nu) e_nu
+$
+
+Let $X = X^mu partial_mu$ and $Y = Y^mu partial_mu$ be vector fields in $M$. Then we define the Lie bracket $[X,Y]$ by
+$
+  [X,Y] f = X [Y[f]] - Y[X[f]]
+$
+with $f in cal(F) (M)$. Consider
+$
+  X [Y[f]] & = X^mu pdv(Y[f], x^mu) \
+           & = X^mu pdv(, x^mu) (Y^nu pdv(f, x^nu))
+$
+so
+$
+  [X,Y] f =[ X^mu pdv(Y^nu, x^mu) - Y^mu pdv(X^nu, x^mu) ] underbrace(pdv(f, x^nu), e_nu f)
+$
+so we can write
+$
+  cal(L)_X Y = [X,Y]
+$
+which is quite nice!
+
+One  can also show that the Lie bracket satisfies
+
+1. bilinearity:
+$
+     [X,c_1 Y_1+c_2 Y_2] & = c_1 [X,Y_1] + c_2 [X,Y_2] \
+  [c_1 X_1 + c_2 C_2, Y] & = c_1 [X_1, Y] + c_2 [X_2, Y]
+$
+
+2. skew-symmetry:
+$
+  [X,Y] = - [Y,X]
+$
+
+3. the Jacobi identity:
+$
+  [[X,Y],Z] + [[Z,X],Y] + [[Y,Z],X] = 0
+$
+
+Then we can show
+$
+  cal(L)_(f X) Y & = f [X,Y] - Y [f] X \
+  cal(L)_X (f Y) & = f[X,Y] + X [f] Y
+$
+
+#proof[
+  Consider
+  $
+    [f X, Y] (g) &= underbrace((f X) (Y(g)), f X (Y(g))) - underbrace(Y ((f X) (g)), Y (f X(g))) \
+    &=^"Leibniz' rule" f X(Y(g)) - f Y(X(g)) - Y(f) X(g) \
+    &= f [X,Y] (g) - Y(f)X(g)
+  $
+  where the Leibniz' rule follows from the product rule for partial derivatives. The second identity is similarly proved.
+
+]
+
+Consider
+$
+  f_* [X,Y] (g) & = [X,Y] (g compose f) \
+                & = X[Y(g compose f)] - Y[X (g compose f)]
+$
+and
+$
+  [f_* X, f_* Y] (g) & = f_* X (Y(g compose f)) - f_* Y (X(g compose f)) \
+  &=^"already pushforwarded" X [Y(g compose f)] - Y[X(g compose f)]
+$
+so
+$
+  f_* [X,Y] = [f_* X, f_* Y]
+$
+
+We can also define the Lie derivative of a one-form $omega in Omega^1 (M)$ along $X in cal(X) (M)$ by
+$
+  cal(L)_X omega equiv lim_(epsilon -> 0) ((sigma_epsilon)^* evaluated(omega)_(sigma_epsilon (x))-evaluated(omega)_x)/epsilon
+$
+with $evaluated(omega)_x in T_x^* M$. Letting $omega = omega_mu dd(x^mu)$ we do as before finding
+$
+  (sigma_epsilon)^* evaluated(omega)_(omega_epsilon (x)) = omega_mu (x) dd(x^mu) + epsilon [X^nu (x) partial_nu omega_mu (x) + partial_mu X^nu (x) omega_nu (x)] dd(x^mu)
+$
+so
+$
+  cal(L)_X omega = (X^nu partial_nu omega_mu + partial_mu X^nu omega_nu) dd(x^mu)
+$
+
+The Lie derivative of $f in cal(F) (M)$ along $sigma_s$ generated by $X$ is
+$
+  cal(L)_X f & equiv lim_(epsilon -> 0) (f(sigma_epsilon (x))-f(x))/epsilon \
+             & = lim_(epsilon -> 0) (f(x^mu + epsilon X^mu (x))-f(x^mu))/epsilon \
+             & = X^mu (x) pdv(f, x^mu) = X[f]
+$
+which is just the directional derivative!
+
+To get the Lie derivative for a general tensor we use the following:
+#proposition[
+  The Lie derivative satisfies
+
+  $ cal(L)_X (t_1+t_2) = cal(L)_X t_1 + cal(L)_X t_2 $
+
+  with $t_1$ and $t_2$ being tensor fields of the same type and
+  $
+    cal(L)_X (t_1 times.circle t_2) = (cal(L)_X t_1) times.circle t_2 + t_1 times.circle (cal(L)_X t_2)
+  $
+  with $t_1$ and $t_2$ being arbitrary tensor fields.
+]
+
+#proof[
+  The first is obvious.
+
+  For the second consider just $Y in cal(X) (M)$ and $omega in Omega^1 (M)$. We construct $Y times.circle omega$. Then $evaluated(Y times.circle omega)_(sigma_epsilon (x))$ is mapped to $x$ by $(sigma_(-epsilon))_* times.circle (sigma_epsilon)^*$,
+  $
+    [(sigma_(-epsilon))_* times.circle (sigma_epsilon)^*] evaluated((Y times.circle omega))_(sigma_epsilon (x)) = evaluated([(sigma_(-epsilon))_* Y times.circle (sigma_epsilon)^* omega])_x
+  $
+  Then it follows that
+  $
+    cal(L)_X (Y times.circle omega) & = lim_(epsilon -> 0) {evaluated([(sigma_(-epsilon))_* Y times.circle (sigma_epsilon)^* omega])_x - evaluated((Y times.circle omega))_x}/epsilon \
+    &= lim_(epsilon -> 0) {(sigma_(-epsilon))_* Y times.circle [(sigma_epsilon)^* omega - omega] + [(sigma_(-epsilon))_* Y - Y] times.circle omega }/epsilon \
+    &= Y times.circle (cal(L)_X omega) + (cal(L)_X Y) times.circle omega
+  $
+  this obviously generalizes to more complicated tensors.
+  This is the Leibniz rule.
+
+]
+
+From the Leibniz rule and Jacobi identity it then follows that
+$
+  cal(L)_([X,Y]) t = cal(L)_X cal(L)_Y t - cal(L)_Y cal(L)_X t
+$
+
+== Differential forms
+We begin by looking at symmetry operations. Considera tensor $omega in cal(T)^0_(r,p) (M)$ then the symmetry operation is defined by
+$
+  P omega(V_1, dots, V_r) equiv omega(V_(P(1)), dots, V_(P(r)))
+$
+with $V_i in T_p M$ and $P in S_r$ (the symmetric group), meaning each $P$ is a permutation.
+
+For $omega in cal(T)^0_(r,p) (M)$ we define the symmetrizer $cal(S)$ by
+$
+  cal(S) omega = 1/r! sum_(P in S_r) P omega
+$
+with the anti-symmetrizer $cal(A)$ being
+$
+  cal(A) omega = 1/r! sum_(P in S_r) sgn(P) P omega
+$
+as their names imply the symmetrizer is totally symmetric ($P cal(S) omega = cal(S) omega$), while the anti-symmetrizer is totally anti-symmetric ($P cal(A) omega = sgn(P) cal(A) omega$).
+
+These are the usual $(dots)$ and $[dots]$ we have used before just with different notation.
+
+#def[Differential form][
+  A differential form of order $r$ or an $r$-form is a totally anti-symmetric tensor of type $(0,r)$.
+]
+
+We also define the wedge product $and$ of $r$ one-forms by the totally anti-symmetric tensor product:
+$
+  dd(x^(mu_1)) and dd(x^(mu_2)) and dots and dd(x^(mu_r)) = sum_(P in S_r) sgn(P) dd(x^(mu_(P(1)))) times.circle dd(x^(mu_(P(2)))) times.circle dots times.circle dd(x^(mu_(P(r))))
+$
+These look like
+$
+  dd(x^mu) and dd(x^nu) &= dd(x^mu) times.circle dd(x^nu) - dd(x^nu) times.circle dd(x^mu) \
+  dd(x^lambda) and dd(x^mu) and dd(x^nu) &= dd(x^lambda) times.circle dd(x^mu) times.circle dd(x^nu) + dd(x^nu) times.circle dd(x^lambda) times.circle dd(x^mu) + dd(x^mu) times.circle dd(x^nu) times.circle dd(x^lambda) \
+  &#h(1em)- dd(x^lambda) times.circle dd(x^nu) times.circle dd(x^mu) - dd(x^nu) times.circle dd(x^mu) times.circle dd(x^lambda) - dd(x^mu) times.circle dd(x^lambda) times.circle dd(x^nu)
+$
+
+The wedge product has the following properties:
+
+1. $dd(x^(mu_1)) and dots and dd(x^(mu_r)) = 0$ if any index is repeated (this follows from total anti-symmetry).
+
+2. $dd(x^mu_1) and dots and dd(x^mu_r)= sgn(P) dd(x^(mu_(P(1)))) and dots and dd(x^(mu_P(r)))$ (since swapping two indices pick up a $minus$)
+
+3. $dd(x^mu_1) and dots and dd(x^mu_r)$ is linear in each $dd(x^mu)$ (since the tensor product is multi-linear).
+
+So it is a multi-linear totally anti-symmetric map.
+
+Consider the vector space of $r$-forms at $p in M$ which we denote by $Omega^r_p (M)$, then the $r$-forms form a basis. Any $omega in Omega_p^r (M)$ can then be written as
+$
+  omega = 1/r! omega_(mu_1 dots mu_r) dd(x^mu_1) and dots and dd(x^mu_r)
+$
+where the $omega_(mu_1 dots mu_r)$ are totally anti-symmetric. To see why consider the components of a type $(0,2)$ tensor $omega_(mu nu)$. These can be decomposed into a symmetric part $sigma_(mu nu)$ and anti-symmetric part $alpha_(mu nu)$ by
+$
+  sigma_(mu nu) & = omega_((mu nu)) equiv 1/2 (omega_(mu nu) + omega_(nu mu)) \
+  alpha_(mu nu) & = omega_([mu nu]) equiv 1/2 (omega_(mu nu)- omega_(nu mu))
+$
+But $sigma_(mu nu) dd(x^mu) and dd(x^nu) = 0$ while $alpha_(mu nu) dd(x^mu) and dd(x^nu) = omega_(mu nu) dd(x^mu) and dd(x^nu)$.
+
+We define $Omega_r^0 (M) = RR$ while clearly $Omega_r^1 (M) = T_p^* M$. The dimension of $Omega_p^r (M)$ is
+$
+  binom(m, r) = m!/((m-r)! r!)
+$
+And if $r > m$ then the wedge product is zero since some index must appear more than once. The equality $binom(m, r) = binom(m, m-r)$ implies $dim Omega_p^r (M) = dim Omega_p^(m-r) (M)$, meaning they must be isomorphic.
+
+We now define the exterior product of a $q$-form and $r$-form $and : Omega_p^q (M) times Omega_p^r (M) -> Omega_p^(q+r) (M)$. Let $omega in Omega_p^q (M)$ and $xi in Omega_p^r (M)$. Then the action of $(omega and xi)$ on $q+r$ vectors is defined by
+$
+  (omega and xi) (V_1, dots, V_(q+r)) = 1/(q! r!) sum_(P in S_(q+r)) sgn(P) omega(V_(P(1)), dots, V_(P(q))) xi (V_(P(q+1)), dots, V_(P(q+r)))
+$
+with $V_i in T_p M$ (as before if $q + r > m$ this vanishes). We can then define an algebra
+$
+  Omega_p^* (M) equiv Omega_p^0 (M) plus.circle Omega_p^1 (M) plus.circle dots plus.circle Omega_p^m (M)
+$
+with $Omega^*_p (M)$ being the space of all differential forms at $p$, this guy is closed under the exterior product.
+
+Letting $xi in Omega_p^q (M)$, $eta in Omega_p^r (M)$ and $omega in Omega_p^s (M)$ the exterior product satisfies:
+
+1. $xi and eta = (-1)^(q r) eta and xi$ (since all $r$ $dd(x^mu)$ of $eta$ need to move past $q$ $dd(x^nu)$ of $xi$) so $eta and eta = 0$ for $q$ odd.
+
+2. $(xi and eta) and omega = xi and (eta and omega)$ (follows from associativity of the tensor product).
+
+To each point on a manifold $M$ we can smoothly assign an $r$-form. The space of smooth $r$-forms on $M$ is denoted by $Omega^r (M)$.
+
+#def[Exterior derivative][
+  The exterior derivative $dif_r$ is a map $Omega^r (M) -> Omega^(r+1) (M)$ which act on an $r$-form as
+  $
+    dif_r omega = 1/r! (pdv(, x^nu) omega_(mu_1 dots mu_r)) dd(x^nu) and dd(x^(mu_1)) and dots and dd(x^(mu_r))
+  $
+  typically this is just written as $dif omega$.
+]
+
+As an example consider the $r$-forms in three-dimensional space:
+
+1. $omega_0 = f(x,y,z)$.
+
+2. $omega_1 = omega_x dd(x) + omega_y dd(y) + omega_z dd(z)$.
+
+3. $omega_2 = omega_(x y) dd(x) and dd(y) + omega_(y z) dd(y) and dd(z) + omega_(z x) dd(z) and dd(x)$.
+
+4. $omega_3 = omega_(x y z) dd(x) and dd(y) and dd(z)$.
+
+The exterior derivative acts on each as:
+
+1. $display(dif omega_0 = pdv(f, x) dd(x)+pdv(f, y) dd(y) + pdv(f, z) dd(z))$ (gradient).
+
+2. $display(dif omega_1 = (pdv(omega_y, x)-pdv(omega_x, y)) dd(x) and dd(y) + (pdv(omega_z, y)-pdv(omega_y, z)) dd(y) and dd(z) + (pdv(omega_x, z) - pdv(omega_z, x)) dd(z) and dd(x))$ (curl).
+
+3. $display(dif omega_2 = (pdv(omega_(y z), x) + pdv(omega_(z x), y) + pdv(omega_(x y), z)) dd(x) and dd(y) and dd(z))$ (divergence).
+
+4. $dif omega_3 = 0$.
+
+We can show that for $xi in Omega^q (M)$ and $omega in Omega^r (M)$ (the Leibniz rule)
+$
+  dif (xi and omega) = dif xi and omega + (-1)^q xi and dif omega
+$
+to see this consider
+$
+  dif (xi and omega) &= sum dif (xi_(mu_1 dots mu_q) omega_(nu_1 dots nu_r)) and underbrace(dd(x^(mu_1)) and dots and dd(x^(mu_q)), xi) and underbrace(dd(x^(nu_1)) and dots and dd(x^(nu_r)), omega) \
+  &= sum (dif xi_dots omega_dot + xi_dots dif omega_dots) and dd(x^(mu_1)) and dots and dd(x^(mu_q)) and dd(x^(nu_1)) and dots and dd(x^(nu_r)) \
+  &= dif xi and omega + (-1)^q xi and dif omega
+$
+where the factor $(-1)^q$ appears since we need to move $dif omega$ past $q$ $dd(x^(mu_i))$.
+
+Another useful identity is
+$
+  dif^2 = 0
+$
+which is easily shown by taking
+$
+  omega = 1/r! omega_(mu_1 dots mu_r) dd(x^(mu_1)) and dots and dd(x^(mu_r)) in Omega^r (M)
+$
+then
+$
+  dif^2 omega = 1/r! pdv(omega_(mu_1 dots mu_r), x^lambda, x^nu) dd(x^lambda) and dd(x^nu) and dd(x^(mu_1)) and dots dd(x^(mu_r)) = 0
+$
+this vanishes since $partial^2$ is symmetric with respect to $lambda$ and $nu$ while $dd(x^lambda) and dd(x^nu)$ is anti-symmetric.
+
+As an example from physics consider the four-potential $A = (phi.alt, A)$. This is a one-form $A = A_mu dd(x^mu)$. The Faraday tensor is defined as $F= dd(A)$. Then the two homogeneous Maxwell equations can be written compactly as $dd(F) = dd((dd(A))) = 0$ which we call the Bianchi identity.
