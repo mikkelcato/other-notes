@@ -644,3 +644,4 @@ $
 this vanishes since $partial^2$ is symmetric with respect to $lambda$ and $nu$ while $dd(x^lambda) and dd(x^nu)$ is anti-symmetric.
 
 As an example from physics consider the four-potential $A = (phi.alt, A)$. This is a one-form $A = A_mu dd(x^mu)$. The Faraday tensor is defined as $F= dd(A)$. Then the two homogeneous Maxwell equations can be written compactly as $dd(F) = dd((dd(A))) = 0$ which we call the Bianchi identity.
+
