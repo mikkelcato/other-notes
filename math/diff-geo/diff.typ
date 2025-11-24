@@ -19,3 +19,4 @@
 )
 
 #include "chpt/chpt-1.typ" // manifold/diff geometry
+#include "chpt/chpt-2.typ"
