@@ -191,7 +191,7 @@ The $A$ term can be written as
 $
   A = sum_(k=1)^n 2 E_p_k (2pi)^3 delta^((3)) (bold(p)_k-bold(q)_1) braket(p_1\,dots underbrace(\, hat(p)_k\,, "without")dots\,p_n", out", q_2\,dots\,q_r", in") \
 $
-to get this we commute $a_"out"^dagger$ past all $a_"out"$ giving $n$ terms with a respective $delta$-function. The $B$ term can be written as
+to get this we commute $a_"out"^dagger$ past all $a_"out"$ giving $n$ terms with a respective $delta$-function (this describes a process where one of the ingoing and outgoing states are identical and do not scatter---a disconnected diagram). The $B$ term can be written as
 $
   B &= i integral dd(x, 4) 1/sqrt(Z) partial_0 [e^(-i q_1 dot x) partial_0 expval(dots)- (partial_0 e^(-i q_1 dot x)) expval(dots)] \
   &=^"cross terms cancel" i integral dd(x, 4) 1/sqrt(Z) [e^(-i q_1 dot x) partial_0^2 expval(dots)-(partial_0^2 e^(-i q_1 dot x) expval(dots))]
@@ -207,4 +207,30 @@ $
 so we find
 $
   B = - i 1/sqrt(Z) integral dd(x_1, 4) e^(-i q_1 dot x_1) (square_1 + m^2) braket(p_1\,dots\,p_n", out", phi.alt(x_1), q_2\,dots\,q_r", in")
+$
+We can write the $expval(dots)$ as
+$
+  expval(dots) &= sqrt(2 E_p_1) braket(p_2\, dots\, p_n\, "out", a_"out" (p_1) phi.alt (x_1), q_2\, dots\, q_r\, "in") \
+  &= lim_(y_1^0 -> oo) i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")
+$
+Now consider
+$
+  & lim_(t_f -> oo #linebreak() t_i -> - oo) integral_(t_i)^(t_f) dd(y_1^0) [pdv(, y_1^0) i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", T phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")] \
+  &#h(1em) = lim_(y_1^0 -> oo) [i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")] \
+  &#h(1em) - underbracket(lim_(y_1^0 -> - oo) [i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", phi.alt(x_1) phi.alt(y_1), q_2\, dots\, q_r\, "in")], = sqrt(2 E_p_1) braket(p_2\, dots "out", phi.alt(x_1) a_"in" (bold(p)_1), q_2 \, dots "in"))
+$
+the last term is disconnected! The term on the LHS is the same as
+$
+  i 1/sqrt(Z) integral dd(y_1, 4) e^(i p_1 dot y_1) (square_(y_1)+m^2) braket(p_2\, dots\, p_n\, "out", T phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")
+$
+so we have found
+$
+  expval(dots) & = "disconnected" + i 1/sqrt(Z) integral dd(y_1, 4) (dots)
+$
+This can be repeated to until our in and out states become vacuum giving the Lehmann-Symanzik-Zimmermann reduction formula
+$
+  braket(p_1\, dots\,p_n\, "out", q_1\, dots\, q_r\, "in") &equiv braket(p_1\, dots\, p_n\, "in", S, q_1\, dots\, q_r\, "in") \
+  &= (Sigma "disconnected terms") \ &+ (i/sqrt(Z))^(n+r) integral dd(y_1, 4) dots dd(y_n, 4) integral dd(x_1, 4) dots dd(x_r, 4) \
+  &times exp[i(sum_(k=1)^n p_k dot y_k - sum_(l=1)^r q_l dot x_l)] \
+  &times (square_(y_1) + m^2) dots (square_(x_1) + m^2) dots braket(Omega, T phi.alt(y_1) dots phi.alt (y_n) phi.alt(x_1) dots phi.alt (x_r), Omega)
 $
