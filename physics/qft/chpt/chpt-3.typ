@@ -227,10 +227,11 @@ so we have found
 $
   expval(dots) & = "disconnected" + i 1/sqrt(Z) integral dd(y_1, 4) (dots)
 $
-This can be repeated to until our in and out states become vacuum giving the Lehmann-Symanzik-Zimmermann reduction formula
+This can be repeated until our in and out states become vacuum giving the Lehmann-Symanzik-Zimmermann reduction formula
 $
   braket(p_1\, dots\,p_n\, "out", q_1\, dots\, q_r\, "in") &equiv braket(p_1\, dots\, p_n\, "in", S, q_1\, dots\, q_r\, "in") \
   &= (Sigma "disconnected terms") \ &+ (i/sqrt(Z))^(n+r) integral dd(y_1, 4) dots dd(y_n, 4) integral dd(x_1, 4) dots dd(x_r, 4) \
   &times exp[i(sum_(k=1)^n p_k dot y_k - sum_(l=1)^r q_l dot x_l)] \
   &times (square_(y_1) + m^2) dots (square_(x_1) + m^2) dots braket(Omega, T phi.alt(y_1) dots phi.alt (y_n) phi.alt(x_1) dots phi.alt (x_r), Omega)
 $
+this reduces computing the $S$-matrix to computing time-ordered correlation functions.
