@@ -14,17 +14,21 @@
     ),
   ),
   abstract: [
-    self-study notes of qft.
+    Notes on introductory quantum field theory. All errors are likely mine.
   ],
 )
 
 = Introduction
-Quantum field theory is essentially the formalism required to combine quantum mechanics and relativity---we work in natural units: $hbar = c = 1$. These notes are heavily inspired by Timo Weigand's notes.
+The first part of these notes are concerned with canonical quantization (Klein-Gordon and Dirac field), and essentially follow the first part of _Peskin and Schroeder_.
 
+The second part of these notes are concerned with introducing path integrals.
 
+We work in natural units $hbar = c = 1$ but notation is likely inconsistent.
 
-#include "chpt/chpt-1.typ" // classical field theory
-#include "chpt/chpt-2.typ" // free scalar field, spin 0
-#include "chpt/chpt-3.typ" // interacting scalar theory
-//#include "chpt/chpt-4.typ" // dirac field, spin 1/2
-//#include "chpt/chpt-5.typ" // spin 1
+#include "chpt/chpt-1.typ" // field theory
+#include "chpt/chpt-2.typ" // free scalar field
+#include "chpt/chpt-3.typ" // dirac field
+#include "chpt/chpt-4.typ" // interacting fields
+//#include "chpt/chpt-5.typ" // kählen LSZ
+//#include "chpt/chpt-6.typ" // spin 1 (?)
+//#include "chpt/chpt-7.typ" // basic path-integrals

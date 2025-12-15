@@ -1,160 +1,134 @@
 //**** init-ting
 #import "@preview/physica:0.9.5": *
 #import "chpt-temp.typ": *
-#import "@preview/mannot:0.3.0": *
 
 #show: thmrules.with(qed-symbol: $square$)
 #show: chpt-note.with()
 
 = Classical field theory
-A field is a quantity defined at every point $(bold(x),t)$. We are interested in the dynamics of these fields $phi.alt_a (bold(x),t) equiv phi.alt_a (x^mu) equiv phi.alt_a (x)$ where $a$ and $bold(x)$ are both considered labels---so we have infinite degrees of freedom, as opposed to classical particle mechanics where we deal with a finite number of generalized coordinates $q_a (t)$---position is now just a label. A familiar example of a field would be the four-potential $A^mu (bold(x),t)$ in electrodynamics.
-
-For now we consider a real scalar field $phi.alt_a (x) = phi.alt^*_a (x)$, we will see that such fields describe spin-zero particles.
-
-== Lagrangian formalism
-The dynamics of the field is determined by a Lagrangian of the form
+== Lagrangian Field Theory
+The fundamental object of interest is the action $S$, which is simply the time-integral of the Lagrangian $L$. Given the field theory is local we can write the Lagrangian in terms of a Lagrangian density $cal(L)$ which is a function of one or more fields $phi.alt(x)$ and their derivatives $partial_mu phi.alt$. So we have
 $
-  L(t) = integral dd(x, 3) cal(L) (phi.alt_a, partial_mu phi.alt_a)
+  S = integral dd(x, 4) cal(L) (phi.alt, partial_mu phi.alt)
 $
-with $cal(L)$ being the Lagrangian density or just Lagrangian. The action is
+we refer to $cal(L)$ as the Lagrangian moving forward. We care about this object since
 $
-  S = integral dd(x, 4) cal(L) (phi.alt_a, partial_mu phi.alt_a)
+  dd(S, d: delta) &= integral dd(x, 4) [pdv(cal(L), phi.alt) dd(phi.alt, d: delta) + pdv(cal(L), (partial_mu phi.alt)) dd((partial_mu phi.alt), d: delta)] \
+  &=^"i.b.p" integral dd(x, 4) [pdv(cal(L), phi.alt) - partial_mu (pdv(cal(L), (partial_mu phi.alt)))] dd(phi.alt, d: delta) +partial_mu (pdv(cal(L), (partial_mu phi.alt)) dd(phi.alt, d: delta))
 $
-and using the principle of least action gives the equations of motion for $phi.alt_a$
-$
-  dd(S, d: delta) &= integral dd(x, 4) [pdv(cal(L), phi.alt_a) dd(phi.alt_a, d: delta) + pdv(cal(L), (partial_mu phi.alt_a)) dd((partial_mu phi.alt_a), d: delta)] \
-  &=^"i.b.p" integral dd(x, 4) [pdv(cal(L), phi.alt_a) - partial_mu (pdv(cal(L), (partial_mu phi.alt_a)))] dd(phi.alt_a, d: delta) +partial_mu (pdv(cal(L), (partial_mu phi.alt_a)) dd(phi.alt_a, d: delta))
-$
-the last term vanishes for any $dd(phi.alt_a (x), d: delta)$ which decays at infinity and obeys $dd(phi.alt_a (bold(x),t_1), d: delta) = dd(phi.alt_a (bold(x),t_2), d: delta) = 0$. We require that $dd(S, d: delta) = 0$ for all paths so we immediately obtain the Euler-Lagrange equations
+the last term vanishes for any $dd(phi.alt, d: delta)$ which decays at infinity and obeys $dd(phi.alt (bold(x),t_1), d: delta) = dd(phi.alt (bold(x),t_2), d: delta) = 0$. By the principle of least action $dd(S, d: delta) = 0$ for all paths, so we obtain the Euler-Lagrange equations of motion
 
 $
-  markrect(
-    partial_mu (pdv(cal(L), (partial_mu phi.alt_a))) - pdv(cal(L), phi.alt_a) = 0, outset: #.3em
-  )
+  partial_mu (pdv(cal(L), (partial_mu phi.alt))) - pdv(cal(L), phi.alt) = 0
 $
-Now we want to find the Lagrangian: in a relativistic theory $cal(L)$ can contain powers of $phi.alt$ and $partial_mu phi.alt partial^mu phi.alt equiv eta^(mu nu) partial_mu phi.alt partial_nu phi.alt$ (the simplest scalar we can build from $partial_mu phi.alt$). This leads us to write
+which should be familiar.
+
+For a relativistic theory $cal(L)$ can contain powers of $phi.alt$ and $partial_mu phi.alt partial^mu phi.alt$. This leads us to write
 $
-  S = integral dd(x, 4) (1/2 partial_mu phi.alt partial^mu phi.alt - V(phi.alt) + O(phi.alt^n (partial phi.alt)^m))
+  cal(L) = 1/2 partial_mu phi.alt partial^mu phi.alt - V(phi.alt) + O(phi.alt^n (partial phi.alt)^m)
 $
 with
 $
   1/2 partial_mu phi.alt partial^mu phi.alt = 1/2 dot(phi.alt)^2 - 1/2 (nabla phi.alt)^2
 $
-and $V(phi.alt(x))$ has the general form
+The potential $V(phi.alt)$ can generally be expanded as
 $
-  V(phi.alt(x)) = a + b phi.alt(x) + c phi.alt^2 (x) + dots
+  V(phi.alt) = a + b phi.alt + c phi.alt^2 + dots
 $
-we assume this potential has a global minimum $phi.alt(x) = phi.alt_0 (x)$ where
+we take this potential to have a global minimum $phi.alt(x) = phi.alt_0 (x)$ where
 $
   evaluated(pdv(V(phi.alt), phi.alt))_(phi.alt=phi.alt_0) = 0,"     " V(phi.alt_0) = V_0
 $
-we can by redefinition ensure $phi.alt_0 (x) equiv 0$ and expand $V(phi.alt(x))$ about this minimum
+Then by redefinition we can ensure $phi.alt_0 (x) equiv 0$ and expand $V(phi.alt)$ about this minima
 $
-  V(phi.alt(x)) = V_0 + 1/2 m^2 phi.alt^2 (x) + O(phi.alt^3 (x))
+  V(phi.alt) = V_0 + 1/2 m^2 phi.alt^2 + O(phi.alt^3)
 $
-where we have used that the linear terms vanish at the extremum, that we expand around a minimum further implies $m^2 > 0$.  The constant $V_0$ is the vacuum energy, we let $V_0 = 0$ for now, but in principle it is arbitrary. The action becomes
-$
-  S = integral dd(x, 4) (1/2 (partial phi.alt)^2 - 1/2 m^2 phi.alt^2 + dots)
-$
-we will see later that $m^2$ is related to the mass of the particles, and the omitted higher powers of $phi.alt$ as well as the terms $O(phi.alt^n (partial phi.alt)^m)$ give rise to interactions between particles.
+note that the above implies $m^2 > 0$.
 
-As is typical we start with the simplest case and ignore interaction terms giving us the action of the free real scalar field theory
+As is typical we start with the simplest case
 $
-  markrect(S = integral dd(x, 4) (1/2 (partial phi.alt)^2 - 1/2 m^2 phi.alt^2)",    " phi.alt = phi.alt^*, outset: #.3em)
+  cal(L) = 1/2 partial_mu phi.alt partial^mu phi.alt - 1/2 m^2 phi.alt^2
 $
-using the Euler-Lagrange equations we find
+which is the theory for a free real scalar field. Using the Euler-Lagrange equations we find
 $
-  markrect((partial_mu partial^mu + m^2) phi.alt (x) = 0, outset: #.3em)
+  (partial_mu partial^mu + m^2) phi.alt (x) = 0
 $
-which is the Klein-Gordon equation. This is a relativistic wave equation solved by
+which is the Klein-Gordon equation. We will return to this guy in shortly.
+
+== Hamiltonian Field Theory
+The Lagrangian formulation as described above is evidently nice when doing relativistic dynamics since the Lorentz invariance is very explicit. But since we start quantum field theory with canonical quantization it is much easier to work with the Hamiltonian formulation.
+
+We define
 $
-  e^(plus.minus i p x);"   " p equiv p^mu
+  p(bold(x)) &equiv pdv(L, dot(phi.alt) (bold(x))) \
+  &= pdv(, dot(phi.alt)(bold(x))) integral dd(y, 3) cal(L) (phi.alt (bold(y)), dot(phi.alt)(bold(y))) \
+  &tilde pdv(, dot(phi.alt)(bold(x))) dd(y, 3) sum_bold(y) cal(L)(phi.alt(bold(y)),dot(phi.alt)(bold(y))) \
+  &= pi(bold(x)) dd(x, 3)
 $
-substitution gives the dispersion relation
+where
 $
-  -p^2 + m^2 = 0 => p^0 = plus.minus sqrt(bold(p)^2 + m^2)
+  pi(bold(x)) equiv pdv(cal(L), dot(phi.alt)(bold(x)))
 $
-we define
+is the _momentum density_ conjugate to $phi.alt (bold(x))$. Then we can write the Hamiltonian as
 $
-  E_bold(p) := sqrt(bold(p)^2 + m^2) equiv E_p
+  H = integral dd(x, 3) [pi(bold(x)) dot(phi.alt)(bold(x))-cal(L)] equiv integral dd(x, 3) cal(H)
 $
-so we write the general solution as
+with $cal(H)$ being the Hamiltonian density.
+
+For the Lagrangian we had before
 $
-  phi.alt (x) = integral dd(p, 3)/(2 pi)^3 1/sqrt(2 E_p) (f(bold(p)) e^(-i p x) + g(bold(p))e^(i p x))
+  cal(L) = 1/2 partial_mu phi.alt partial^mu phi.alt - 1/2 m^2 phi.alt^2
 $
-for real $phi.alt$: $f^* = g$, and $p x equiv p dot x = p^mu x_mu$.
+we compute $pi(x) = dot(phi.alt)(x)$ so the Hamiltonian is
+$
+  H = integral dd(x, 3) [1/2 pi^2 + 1/2 (nabla phi.alt)^2 + 1/2 m^2 phi.alt^2]
+$
 
 == Noether's Theorem
-We consider a Lagrangian $cal(L) (phi.alt, partial_mu phi.alt)$. A symmetry is defined as a field transformation by which $cal(L)$ changes at most by a total derivative leaving the action invariant---ensuring the equations of motion are invariant. Symmetries and conservation laws are related by Noether's theorem:
-#thm[
-  Every continuous symmetry gives rise to a Noether current $j^mu (x)$ such that (on-shell)
-  $
-    partial_mu j^mu = 0
-  $
-]
+Symmetries and conservation laws are closely connected. This is typically summarized by Noether's theorem.
 
-#proof[
-  For a continuous symmetry we can write
-  $
-    phi.alt -> phi.alt + epsilon dd(phi.alt, d: delta) + O (epsilon^2)
-  $
-  with $dd(phi.alt, d: delta) = X (phi.alt, partial_mu phi.alt)$. We know
-  $
-    cal(L) -> cal(L) + epsilon dd(cal(L), d: delta) + O(epsilon^2)
-  $
-  with $dd(cal(L), d: delta) = partial_mu F^mu$ for some $F^mu$. Under some arbitrary $phi.alt -> phi.alt + epsilon dd(phi.alt, d: delta)$ we have
-  $
-    dd(cal(L), d: delta) &= pdv(cal(L), phi.alt) dd(phi.alt, d: delta) + pdv(cal(L), (partial_mu phi.alt)) dd((partial_mu phi.alt), d: delta) \
-    &= partial_mu (pdv(cal(L), (partial_mu phi.alt)) dd(phi.alt, d: delta)) + (pdv(cal(L), phi.alt) - partial_mu pdv(cal(L), (partial_mu phi.alt))) dd(phi.alt, d: delta)
-  $
-  If $dd(phi.alt, d: delta) = X$ is a symmetry then $dd(cal(L), d: delta) = partial_mu F^mu$. Defining
-  $
-    markrect(j^mu equiv pdv(cal(L), (partial_mu phi.alt)) X - F^mu, outset: #.3em)
-  $
-  we have
-  $
-    partial_mu j^mu = - (pdv(cal(L), phi.alt) - partial_mu pdv(cal(L), (partial_mu phi.alt))) X =^"E.L" 0
-  $
-]
-#lemma[
-  Every continuous symmetry whose Noether current satisfies $j^i (t, bold(x)) -> 0$ sufficiently fast for $abs(bold(x)) -> oo$ gives rise to a conserved charge $Q$ with
-  $
-    markrect(dot(Q) = 0, outset: #.3em)
-  $
-]
-#proof[
-  Take
-  $
-    Q = integral_(RR^3) dd(x, 3) j^0 (t, bold(x))
-  $
-  then
-  $
-    dot(Q) & = integral_(RR^3) dd(x, 3) pdv(, t) j^0 \
-           & =^(partial_mu j^mu = 0) - integral_(RR^3) dd(x, 3) partial_i j^i = 0
-  $
-]
-the assumption that $j^i -> 0$ for $abs(bold(x)) -> oo$ is essentially the assumption that the fields vanish at spatial infinity which is usually valid.
+We consider continuous transformations on $phi.alt$. An infinitesimal transformation can be written as
+$
+  phi.alt (x) |-> phi.alt' (x) = phi.alt (x) + alpha dd(phi.alt, d: delta) (x)
+$
+we call the transformation a symmetry if it leaves the action invariant. For this to hold we allow the Lagrangian to change by a total derivative
+$
+  cal(L) (x) |-> cal(L)(x) + underbrace(alpha partial_mu cal(T)^mu (x), alpha dd(cal(L), d: delta))
+$
+for some $cal(T)^mu$. We compare this to
+$
+  alpha dd(cal(L), d: delta) &= pdv(cal(L), phi.alt) (alpha dd(phi.alt, d: delta)) + (pdv(cal(L), (partial_mu phi.alt), d: delta)) partial_mu (alpha dd(phi.alt, d: delta)) \
+  &= alpha partial_mu (pdv(cal(L), (partial_mu phi.alt)) dd(phi.alt, d: delta)) + alpha [pdv(cal(L), phi.alt) - partial_mu (pdv(cal(L), (partial_mu phi.alt)))] dd(phi.alt, d: delta) \
+  &=^"by E.L" alpha partial_mu (pdv(cal(L), (partial_mu phi.alt)) dd(phi.alt, d: delta))
+$
+and find
+$
+  partial_mu j^mu (x) = 0 "  for  " j^mu (x) equiv pdv(cal(L), (partial_mu phi.alt)) dd(phi.alt, d: delta) - cal(T)^mu
+$
+so for each symmetry we have a conserved $j^mu$. We can also express this by saying the charge
+$
+  Q equiv integral j^0 dd(x, 3)
+$
+is time-independent.
 
-We now consider a global transformation $x^mu -> x^mu + epsilon^mu$, a scalar field $phi.alt(x^mu)$ transforms like
+As an example consider spacetime translations. The transformation
 $
-  phi.alt(x^mu) -> phi.alt(x^mu-epsilon^mu) = phi.alt(x^mu) - epsilon^nu underbrace(partial_nu phi.alt(x^mu), equiv X_nu (phi.alt)) + O(epsilon^2)
+  x^mu |-> x^mu - a^mu
 $
-and $cal(L)$ transforms as
+can be written alternatively as a transformation of the fields
 $
-  cal(L) -> cal(L) - epsilon^nu partial_nu cal(L) &= cal(L) - tensor(eta, mu, -nu) epsilon^nu partial_mu cal(L) \
-  &= cal(L) - epsilon^nu partial_mu underbrace(tensor(eta, mu, -nu) cal(L), equiv (F^mu)_nu)
+  phi.alt(x) |-> phi.alt (x+a) = phi.alt (x) + a^mu underbrace(partial_mu phi.alt(x), dd(phi.alt, d: delta))
 $
-so for each $nu$ we have a conserved current $(j^mu)_nu$
+the Lagrangian is a scalar so
 $
-  (j^mu)_nu = pdv(cal(L), (partial_mu phi.alt)) partial_nu phi.alt - tensor(eta, mu, -nu) cal(L)
+  cal(L) |-> cal(L) + a^mu partial_mu cal(L) = cal(L) + a^nu partial_mu underbrace((tensor(delta, mu, -nu) cal(L)), cal(T)^mu)
 $
-with both up we get the canonical energy-momentum tensor
+We find four separately conserved currents
 $
-  markrect(T^(mu nu) = pdv(cal(L), (partial_mu phi.alt)) partial^nu phi.alt - eta^(mu nu) cal(L)" with " partial_mu T^(mu nu) =^"on-shell" 0, outset: #.3em)
+  tensor(T, mu, -nu) equiv pdv(cal(L), (partial_mu phi.alt)) partial_nu phi.alt - cal(L) tensor(delta, mu, -nu)
 $
-the conserved charges are the energy $E = integral dd(x, 3) T^(00)$ associated with time translation invariance, and the spatial momentum $P^i = integral dd(x, 3) T^(0i)$ associated with spatial translation invariance. These can be combined
+this is the energy-momentum tensor of the field $phi.alt$! The conserved charges related to this are
 $
-  P^nu = integral dd(x, 3) T^(0 nu)" with "dot(P)^nu = 0
+    H & = integral T^00 dd(x, 3) = integral cal(H) dd(x, 3) \
+  P^i & = integral T^(0 i) dd(x, 3) = - integral pi partial_i phi.alt dd(x, 3)
 $
-
-

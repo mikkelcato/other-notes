@@ -1,237 +1,608 @@
 //**** init-ting
-#import "@preview/physica:0.9.5": *
+#import "@preview/physica:0.9.7": *
 #import "chpt-temp.typ": *
-#import "@preview/mannot:0.3.0": *
+#import "@preview/wicked:0.1.1": *
 
 #show: thmrules.with(qed-symbol: $square$)
 #show: chpt-note.with()
 
-= Interacting scalar theory
-Thus far we have considered a free scalar theory:
-$
-  cal(L)_0 = 1/2 partial_mu phi.alt partial^mu phi.alt - V_0 (phi.alt)
-$
-with $V_0 (phi.alt) = 1/2 m_0^2 phi.alt^2$. It is necessarily a _boring_ theory in the sense that there are no interactions between particles. In QFT interactions are described by potentials $V(phi.alt)$ with higher order terms, formally
-$
-  V(phi.alt) = underbrace(1/2 m_0^2 phi.alt^2, V_0) + underbrace(1/3! g phi.alt^3 + 1/4! lambda phi.alt^4 + dots, V_"int")
-$
-leading us to write $cal(L)=cal(L)_0 + cal(L)_"int"$ with $cal(L)_"int" = - V_"int"$ and similarly $H=H_0 + H_"int"$. These additional terms have many consequences. First of all it changes our Hilbert space in multiple ways: The ground state $ket(Omega)$ of $H$ is different from the ground state $ket(0)$ of $H_0$---so our vacuum is different. The mass of the momentum eigenstates of $H$ is no longer the mass $m_0$ in $cal(L)_0$. And bound states may exists. Aside from this the additional terms lead to interactions.
+= The Dirac Field
+Now that we have looked at the simplest possible field theory we move on to the next simplest: the Dirac field.
 
-The holy grail in QFT is to solve these non-free theories exactly---but this has only been possible for theories with sufficient symmetry. For this reason we typically resort to pertubation theory, given the couplings $g$ and $lambda$ are small allowing us to ignore higher order terms.
+== The Lorentz algebra
+So far we have only considered scalar fields which under a Lorentz transformation $ x^mu -> (x')^mu = tensor(Lambda, mu, -nu) x^mu $ transform as
+$
+  phi.alt (x) -> phi.alt' (x) = phi.alt (Lambda^(-1) x)
+$
+in a sense they transform trivially. Naturally we invoke new physics by considering fields that transform non-trivially under the Lorentz group.
 
-== Källén-Lehmann
-We saw before how $P^mu$ generate spacetime translations, so if we have Lorentz invariance then $[P^mu,P^nu] = 0$ implying $[H, bold(p)] = 0$. As a consequence we can find a simultaneous eigenstates $ket(lambda_bold(p))$ such that
+A familiar example which transforms non-trivially under the Lorentz group is the vector field $A^mu (x)$ of electromagnetism
 $
-  H ket(lambda_(bold(p))) = E_p (lambda) ket(lambda_bold(p))";   " bold(P) ket(lambda_(bold(p))) = bold(p) ket(lambda_bold(p))
+  A^mu (x) -> tensor(Lambda, mu, -nu) A^nu (Lambda^(-1) x)
 $
-with $ket(lambda_bold(p)) ->^"Lorentz" overbrace(ket(lambda_0), "at rest")$. These states can be one-particle states $ket(1_bold(p))$ with $E_p = sqrt(bold(p)^2+m^2)$, bound states, or $N$-particle states made from one-particle or bound states. In this case $bold(p)$ is the center of mass momentum---with any of these being created from vacuum $ket(Omega)$. The difference being now
+using this guy we can construct the invariant Lagrangian
 $
-  (partial_mu partial^mu + m^2) phi.alt = underbrace(j, "current") eq.not 0
+  cal(L)_"Maxwell" = - 1/4 F_(mu nu) F^(mu nu)
 $
-so we cannot simply expand $phi.alt(x)$ as a superposition of Fourier modes.
+which is invariant due to all indices contracting. A family of similar invariant Lagrangians can also be constructed in this manner.
 
-We will use completeness
+We would like to find all possible invariant expressions. This necessarily requires a method to figure out how different fields transform under the Lorentz group. This amounts to finding different representations of the Lorentz group. Generally a field transforms as
 $
-  bb(1) = ketbra(Omega) + underbrace(sum_lambda, "all types of state") overbrace(integral dd(p, 3)/(2pi)^3 1/(2 E_p (lambda)), "c.o.m momentum of state") ketbra(lambda_bold(p))
+  phi.alt^alpha (x) -> tensor(D[Lambda], alpha, -beta) phi.alt^beta (Lambda^(-1) x)
 $
-to try and compute the Feynmann-propagator
+with the matrices $D[Lambda]$ forming a representation of the Lorentz group, meaning
 $
-  braket(Omega, T phi.alt(x) phi.alt(y), Omega)
+  D[Lambda_1] D[Lambda_2] & = D[Lambda_1 Lambda_2] " with " D[Lambda^(-1)] = D[Lambda]^(-1)",  "D[bb(1)] = bb(1)
 $
-first note (since $P^mu ket(Omega) = 0$)
-$
-  phi.alt(x) = e^(i x^mu P_mu) phi.alt(0) e^(-i x^mu P_mu) => braket(Omega, phi.alt(x), Omega)=overbrace(braket(Omega, phi.alt(0), Omega), "if" braket(Omega, phi.alt(0), Omega)=c "let" phi.alt -> phi.alt-c) = 0
-$
-now we compute
-$
-  braket(Omega, phi.alt(x) bb(1) phi.alt(y), Omega) &= sum_lambda integral dd(p, 3)/(2pi)^3 1/(2 E_p (lambda)) braket(Omega, phi.alt(x), lambda_bold(p)) braket(lambda_bold(p), phi.alt(y), Omega) \
-  &= sum_lambda integral dd(p, 3)/(2pi)^3 1/(2 E_p (lambda)) underbrace(bra(Omega) e^(i P dot x), = bra(Omega)) phi.alt(0) underbrace(e^(- i P dot x) ket(lambda_bold(p)), ket(lambda_bold(p))e^(-i p dot x)) bra(lambda_bold(p)) e^(i P dot y) phi.alt(0) e^(-i P dot y) ket(Omega) \
-  &= sum_lambda integral dd(p, 3)/(2pi)^3 1/(2 E_p (lambda)) e^(-i p dot (x - y)) abs(braket(Omega, phi.alt(0), lambda_bold(p)))^2
-$
-now we want to relate $ket(lambda_bold(p))$ to $ket(lambda_0)$.
+So the matrices $D[Lambda]$ respect the group structure of the Lorentz group, i.e. they are a group homomorphism.
 
-#nte[
+To find the representations we typically consider infinitesimal transformations of the Lorentz group and the corresponding Lie algebras. We write
+$
+  tensor(Lambda, mu, -nu) = tensor(delta, mu, -nu) + tensor(theta, mu, -nu)
+$
+for infinitesimal $theta$. By the defining condition $tensor(Lambda, mu, -sigma) tensor(Lambda, nu, -rho) eta^(sigma rho) = eta^(mu nu)$ we find that $theta$ must be anti-symmetric
+$
+  theta^(mu nu) + theta^(nu mu) =^! 0
+$
+Since $theta$ has six independent components (due to being a $4 times 4$ anti-symmetric matrix) we introduce the basis $tensor((M^(rho sigma)), mu, -nu)$ with  $rho, sigma = 0, dots 3$ and $[rho sigma]$ being anti-symmetric. With this notation we can write
+$
+  (M^(rho sigma))^(mu nu) = eta^(rho mu) eta^(sigma nu) - eta^(sigma mu) eta^(rho nu)
+$
+where $[rho sigma]$ indicating which basis matrix we are dealing with and $[mu nu]$ are those of the $4 times 4$ matrix. Typically we need one index lowered giving
+$
+  tensor((M^(rho sigma)), mu, -nu) = eta^(rho mu) tensor(delta, sigma, -nu) - eta^(sigma mu) tensor(delta, rho, -nu)
+$
+Now any $tensor(theta, mu, -nu)$ can be expanded as
+$
+  tensor(theta, mu, -nu) = 1/2 omega_(rho sigma) tensor((M^(rho sigma)), mu, -nu)
+$
+where $omega_(rho sigma)$ are six anti-symmetric numbers telling us which Lorentz transformation we  are doing. The basis matrices $M^(rho sigma)$ are called the _generators_ of the Lorentz transformations. The generators obey the Lorentz Lie algebra
+$
+  [M^(rho sigma), M^(tau nu)] = eta^(sigma tau) M^(rho nu) - eta^(rho tau) M^(sigma nu) + eta^(rho nu) M^(sigma tau) - eta^(sigma nu) M^(rho tau)
+$
+Any finite Lorentz transformation can then be written as the exponential
+$
+  Lambda = exp(1/2 omega_(rho sigma) M^(rho sigma))
+$
+in Peskin & Schroeder they make the generators Hermitian by defining $J^(mu nu) = i M^(mu nu)$. Giving
+$
+  Lambda = exp(-i/2 omega_(rho sigma) J^(rho sigma))
+$
+this naturally also flips the signs in the Lie algebra and a factor of $i$.
 
-  Consider a scalar field transforming under a Lorentz transformation
-  $
-    x -> x' = Lambda x
-  $
-  the action of the Lorentz group can be represented in terms of some unitary operator $U(Lambda)$ such that
-  $
-    ket(alpha) -> ket(alpha') = U(Lambda) ket(alpha)
-  $
-  the scalar field then transforms like
-  $
-    phi.alt(x) -> phi.alt' (x') = phi.alt(x(x'))
-  $
-  with $phi.alt' (x') = U^(-1) (Lambda) phi.alt(x') U(Lambda)$ giving
-  $
-    U^(-1) (Lambda) phi.alt(x') U(Lambda) = phi.alt(x)
-  $
-  alternatively this is what we get from
-  $
-    underbrace(braket(alpha', phi.alt(x'), beta'), braket(alpha, U^(-1) phi.alt(x') U, beta)) = braket(alpha, phi.alt(x), beta)
-  $
-]
+== The spinor representation
+We would now like to find other matrices satisfying the Lorentz algebra. We will construct the spinor representation. We start by considering the Clifford (or Dirac) algebra
+$
+  {gamma^mu, gamma^nu} equiv gamma^mu gamma^nu + gamma^nu gamma^mu = 2 eta^(mu nu) bb(1)_(n times n)
+$
+where $gamma^mu$ are four $n times n$ matrices. We see immediately that
+$
+  gamma^mu gamma^nu = - gamma^nu gamma^mu " when " mu eq.not nu
+$
+and
+$
+  (gamma^0)^2 & = 1 \
+  (gamma^i)^2 & = - 1
+$
+The simplest representation of the Clifford algebra is in terms of $4 times 4$ matrices. There are many such examples, but all are unitarily equivalent. For this reason we pick the very convenient representation
+$
+  gamma^0 = mat(0, 1; 1, 0)";  " gamma^i = mat(0, sigma^i; -sigma^i, 0)
+$
+this is the Weyl or _chiral_ representation and the $sigma^i$ are as usual the Pauli matrices satisfying ${sigma^i, sigma^j} = 2 delta^(i j)$.
 
-Then defining a boost such that $ket(lambda_bold(p)) = U^(-1) ket(lambda_0)$
-$
-  braket(Omega, phi.alt(0), lambda_bold(p)) &= underbrace(bra(Omega) U^(-1), bra(Omega)) underbrace(U phi.alt(0) U^(-1), phi.alt(0)) underbrace(U ket(lambda_bold(p)), ket(lambda_0))
-$
-giving
-$
-  braket(Omega, phi.alt(x)phi.alt(y), Omega) = sum_lambda integral dd(p, 3)/(2pi)^3 1/(2 E_p (lambda)) e^(-i p dot (x-y)) abs(braket(Omega, phi.alt(0), lambda_0))^2
-$
-comparing with the free scalar theory result we can obtain the time-ordered expression:
-$
-  markrect(braket(Omega, T phi.alt(x) phi.alt(y), Omega) = sum_lambda integral dd(p, 4)/(2pi)^4 i/(p^2-m_lambda^2 + i epsilon) e^(-i p dot (x-y)) abs(braket(Omega, phi.alt(0), lambda_0))^2, outset: #.3em)
-$
-or defining
-$
-  D_F (x-y\;M^2) &equiv integral dd(p, 4)/(2pi)^4 i/(p^2 - M^2 + i epsilon) e^(-i p dot (x-y)) \
-  rho(M^2) &equiv sum_lambda 2 pi delta(M^2-m_lambda^2) abs(braket(Omega, phi.alt(0), lambda_0))^2
-$
-we can write
-$
-  braket(Omega, T phi.alt(x) phi.alt(y), Omega) = integral_0^oo dd(M^2)/(2 pi) rho(M^2) D_F (x-y\;M^2)
-$
-For a one-particle state it is clear that the spectral function $rho(M^2)$ is a single isolated $delta$-function at $M^2 = m^2$. So below $M^2 tilde (2m)^2$ or $M^2 tilde m_"bound"^2$ it takes the form
-$
-  rho(M^2) = 2 pi delta(M^2 - m^2) Z",   "Z equiv abs(braket(Omega, phi.alt(0), 1_0))^2
-$
-in particular consider the Fourier transformation
-$
-  integral dd(x, 4) e^(i p dot (x-y)) braket(Omega, T phi.alt(x) phi.alt(y), Omega)&= integral_0^oo dd(M^2)/(2 pi) rho(M^2) i/(p^2-M^2+ i epsilon) \
-  &= underbrace((i Z)/(p^2 - m^2 + i epsilon), "one-particle state" #linebreak() "is first pole at" m^2) + integral_(m^2_"bound")^oo dd(M^2)/(2 pi) rho(M^2) i/(p^2-M^2+ i epsilon)
-$
-bound states then occur at higher isolated poles and $N$-particle states lead to a branch cut at $p^2 = 4 m^2$.
-
-In the free theory $Z = 1$ since $phi.alt(0)$ creates a free particle from vacuum. In an interacting theory
-$
-  abs(braket(Omega, phi.alt(0), 1_0)) = sqrt(Z) < 1
-$
-since $phi.alt$ does not only create a one-particle state leading to a smaller overlap. One can formally prove that $Z= 1$ if and only if the theory is free.
-
-== The S-matrix
-We consider scattering of some incoming states $ket(i)$ to outgoing states $ket(f)$, with the aim being computing the probability amplitude for scattering of $ket(i)$ to $ket(f)$.
-
-We assume that the initial and final states are asymptotically free. So at $t = -oo$ the states $ket(i", in")$ are described by the free theory---as they approach each other they interact, and scatter into $ket(f)$. Later at $t = oo$ they are again described by the free theory. This notion is formalised by $phi.alt_"in"$ and $phi.alt_"out"$.
-
-The in-state $ket(i", in")$ is made from the asymptotic vacuum $ket("vac, in")$ using $phi.alt_"in"$ as $t->-oo$. We will find that $ket("vac, in") = ket(Omega)$. The state $ket(i", in")$ has energy $E= sqrt(p^2+m^2)$ with $m$ being the value of the one-particle pole in the Feynmann-propagator of the full theory. So $m eq.not m_0$ meaning $phi.alt_"in"$ is a free field satisfying
-$
-  (partial_mu partial^mu + m^2) phi.alt_"in" = 0
-$
-so we can expand $phi.alt_"in"$ as
-$
-  phi.alt_"in" (x) = integral dd(p, 3)/(2pi)^3 1/sqrt(2 E_p) (a_"in" (bold(p)) e^(-i p dot x) + a_"in"^dagger (bold(p))e^(i p dot x))
-$
-where $p^0 = sqrt(bold(p)^2+m^2)$.
-
-As $t-> - oo$ we identify $phi.alt_"in" tilde phi.alt$ like the following: $phi.alt -> C phi.alt_"in"$ leading to $ braket(alpha, phi.alt, beta) -> sqrt(Z) braket(alpha, phi.alt_"in", beta)"  weakly" $ meaning this does not hold for powers of $phi.alt$---if it did one would have $Z = 1$. As $t -> +oo$ $phi.alt_"out"$ has analogous properties. So the fields $phi.alt_"out"$ and $phi.alt_"in"$ are free fields with the mass $m$ of the full theory. At $t -> minus.plus oo$ we only have self-interactions of the field, leading to $m eq.not m_0$ and $Z eq.not 1$.
-
-Since $ket(i", in") tilde.equiv ket(i", out")$ there exists some operator $S: cal(H)_"out" -> cal(H)_"in"$ such that
-$
-  ket(i", in") = S ket(i", out")
-$
-this operator has many nice properties:
-$
-  S^dagger &= S^(-1) \
-  phi.alt_"in" (x) &= S phi.alt_"out" (x) S^(-1) \
-  ket("vac, in") &= ket("vac, out") = ket(Omega)";  " S ket(Omega) = ket(Omega)
-$
-we want to compute the transition amplitude
-$
-  braket(f", out", i", in") = braket(f", in", S, i", in")
-$
-
-== LSZ reduction formula
-We want to compute the matrix element
-$
-  braket(p_1\, dots\, p_n", out", q_1\, dots\, q_r", in")
-$
-recall
-$
-  phi.alt_"in" (x) = integral dd(k, 3)/(2pi)^3 1/sqrt(2 E_k) (a_"in" (bold(k)) e^(-i k dot x) + a_"in"^dagger (bold(k))e^(i k dot x))
-$
-then by definition
-$
-  ket(q_i", in") = sqrt(2 E_q_i) a_"in"^dagger (q_i) ket(Omega)
-$
-we can invert the above to find expansions for $a_"in"$ and $a_"in"^dagger$ giving
-$
-  a_"in" (bold(q)) = i/sqrt(2 E_q) evaluated(integral dd(x, 3) e^(i q dot x) arrow.l.r(partial_0) phi.alt_"in" (x))_(x^0=t)
-$
-with the integral being evaluated at arbitrary time $t$. Then we can write
-$
-  braket(p_1\, dots\, p_n", out", q_1\,dots\,q_r", in") &= sqrt(2 E_q_1) braket(p_1\,dots\,p_n", out", a_"in"^dagger (bold(q)_1), q_2\,dots\,q_r", in") \
-  &= 1/i evaluated(integral dd(x, 3) e^(-i q_1 dot x) arrow.r.l(partial_0) braket(p_1\,dots\,p_n", out", phi.alt_"in" (t,bold(x)), q_2\,dots\,q_r", in"))_(x^0=t)
-$
-taking $t -> - oo$ and using
-$
-  lim_(t->-oo) braket(1_bold(p), phi.alt_"in" (t,bold(x)), Omega) = lim_(t -> - oo) 1/sqrt(Z) braket(1_bold(p), phi.alt(t, bold(x)), Omega)
-$
-(which generalizes) we obtain
-$
-  & braket(p_1\,dots\,p_n", out", q_1\,dots\,q_r", in") \ &= lim_(t-> - oo) 1/sqrt(Z) underbrace(1/i integral dd(x, 3) e^(-i q_1 dot x) arrow.r.l(partial_0) braket(p_1\,dots\,p_n", out", phi.alt(x), q_2\,dots\,q_r", in"), equiv integral dd(x, 3) f(t,bold(x)))
-$
-now note
-$
-  &(lim_(t -> oo) - lim_(t-> - oo)) integral dd(x, 3) f(t,bold(x)) = underbrace(lim_(t_f -> oo) integral_(t_i -> -oo)^(t_f) dd(t) pdv(, t) integral dd(x, 3) f(t,bold(x)), equiv integral dd(x, 4) partial_0 f(x)) \
-  &=> lim_(t-> -oo) integral dd(x, 3) f(t,bold(x)) = lim_(t-> + oo) integral dd(x, 3) f(t,bold(x)) - integral dd(x, 4) partial_0 f(x)
-$
-so defining
-$
-  B & equiv integral dd(x, 4) 1/sqrt(Z) partial_0 [e^(-i q_1 dot x) 1/i arrow.r.l(partial_0) braket(p_1\,dots\,p_n", out", phi.alt(x), q_2\,dots\,q_r", in")] \
-  A & equiv lim_(t-> oo) integral dd(x, 3) 1/i e^(-i q_1 dot x) arrow.r.l(partial_0) underbrace(1/sqrt(Z) braket(p_1\,dots\,p_n", out", phi.alt(x), q_2\,dots\,q_r", in"), "for" t-> oo": " braket(p_1\,dots\,p_n", out", phi.alt_"out" (x), q_2\,dots\,q_r", in")) \
-  &= braket(p_1\,dots\,p_n", out", a_"out"^dagger (bold(q)_1), q_2\,dots\,q_r", in") sqrt(2 E_q_1)
-$
-we can write $ braket(p_1\,dots\,p_n", out", q_1\,dots\,q_r", in") = A-B $
-
-The $A$ term can be written as
-$
-  A = sum_(k=1)^n 2 E_p_k (2pi)^3 delta^((3)) (bold(p)_k-bold(q)_1) braket(p_1\,dots underbrace(\, hat(p)_k\,, "without")dots\,p_n", out", q_2\,dots\,q_r", in") \
-$
-to get this we commute $a_"out"^dagger$ past all $a_"out"$ giving $n$ terms with a respective $delta$-function (this describes a process where one of the ingoing and outgoing states are identical and do not scatter---a disconnected diagram). The $B$ term can be written as
-$
-  B &= i integral dd(x, 4) 1/sqrt(Z) partial_0 [e^(-i q_1 dot x) partial_0 expval(dots)- (partial_0 e^(-i q_1 dot x)) expval(dots)] \
-  &=^"cross terms cancel" i integral dd(x, 4) 1/sqrt(Z) [e^(-i q_1 dot x) partial_0^2 expval(dots)-(partial_0^2 e^(-i q_1 dot x) expval(dots))]
-$
-now
-$
-  -partial_0^2 e^(-i q_1 dot x) = (q_1^0)^2 e^(-i q_1 dot x) = (q_1^2 + bold(q)_1^2) e^(-i q_1 dot x) = (m^2 - nabla^2) e^(-i q_1 dot x)
-$
-we integrate by parts twice (and using that boundary terms vanish at $plus.minus oo$)
-$
-  integral dd(x, 4) (m^2 - nabla^2) e^(-i q_1 dot x) expval(dots) =^"i.b.p" integral dd(x, 4) e^(-i q_1 dot x) (m^2 - nabla^2) expval(dots)
-$
-so we find
-$
-  B = - i 1/sqrt(Z) integral dd(x_1, 4) e^(-i q_1 dot x_1) (square_1 + m^2) braket(p_1\,dots\,p_n", out", phi.alt(x_1), q_2\,dots\,q_r", in")
-$
-We can write the $expval(dots)$ as
-$
-  expval(dots) &= sqrt(2 E_p_1) braket(p_2\, dots\, p_n\, "out", a_"out" (p_1) phi.alt (x_1), q_2\, dots\, q_r\, "in") \
-  &= lim_(y_1^0 -> oo) i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")
-$
 Now consider
 $
-  & lim_(t_f -> oo #linebreak() t_i -> - oo) integral_(t_i)^(t_f) dd(y_1^0) [pdv(, y_1^0) i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", T phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")] \
-  &#h(1em) = lim_(y_1^0 -> oo) [i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")] \
-  &#h(1em) - underbracket(lim_(y_1^0 -> - oo) [i 1/sqrt(Z) integral dd(y_1, 3) e^(i p_1 dot y_1) arrow.l.r(partial)_(y_1^0) braket(p_2\, dots\, p_n\, "out", phi.alt(x_1) phi.alt(y_1), q_2\, dots\, q_r\, "in")], = sqrt(2 E_p_1) braket(p_2\, dots "out", phi.alt(x_1) a_"in" (bold(p)_1), q_2 \, dots "in"))
+  S^(mu nu) & = i/4 [gamma^mu, gamma^nu] = i/2 ( gamma^mu gamma^nu - eta^(mu nu))
 $
-the last term is disconnected! The term on the LHS is the same as
+then
 $
-  i 1/sqrt(Z) integral dd(y_1, 4) e^(i p_1 dot y_1) (square_(y_1)+m^2) braket(p_2\, dots\, p_n\, "out", T phi.alt(y_1) phi.alt(x_1), q_2\, dots\, q_r\, "in")
+  [S^(mu nu), gamma^rho] &=^(mu eq.not nu) i/2 [gamma^mu gamma^nu, gamma^rho] = i/2 gamma^mu gamma^nu gamma^rho - i/2 gamma^rho gamma^mu gamma^nu \
+  &= i/2 gamma^mu {gamma^nu, gamma^rho} - i/2 gamma^mu gamma^rho gamma^nu - i/2 {gamma^rho,gamma^mu} gamma^nu + i/2 gamma^mu gamma^rho gamma^nu \
+  &= i (gamma^mu eta^(nu rho) - gamma^nu eta^(rho mu)) \
+  &=^? - tensor((J^(mu nu)), rho, -sigma) gamma^sigma
 $
-so we have found
+and importantly the matrices $S^(mu nu)$ form a representation of the Lorentz algebra, meaning
 $
-  expval(dots) & = "disconnected" + i 1/sqrt(Z) integral dd(y_1, 4) (dots)
+  [S^(mu nu), S^(rho sigma)] &=^(rho eq.not sigma) i/2 [S^(mu nu), gamma^rho gamma^sigma] \
+  &= i/2 [S^(mu nu), gamma^rho] gamma^sigma + i/2 gamma^rho [S^(mu nu), gamma^sigma] \
+  &= -1/2 gamma^mu gamma^sigma eta^(nu rho) + 1/2 gamma^nu gamma^sigma eta^(rho mu) - 1/2 gamma^rho gamma^mu eta^(nu sigma) + 1/2 gamma^rho gamma^nu eta^(sigma mu)
 $
-This can be repeated until our in and out states become vacuum giving the Lehmann-Symanzik-Zimmermann reduction formula
+now using $gamma^mu gamma^sigma = -2i S^(mu sigma) + eta^(mu sigma)$ gives
 $
-  braket(p_1\, dots\,p_n\, "out", q_1\, dots\, q_r\, "in") &equiv braket(p_1\, dots\, p_n\, "in", S, q_1\, dots\, q_r\, "in") \
-  &= (Sigma "disconnected terms") \ &+ (i/sqrt(Z))^(n+r) integral dd(y_1, 4) dots dd(y_n, 4) integral dd(x_1, 4) dots dd(x_r, 4) \
-  &times exp[i(sum_(k=1)^n p_k dot y_k - sum_(l=1)^r q_l dot x_l)] \
-  &times (square_(y_1) + m^2) dots (square_(x_1) + m^2) dots braket(Omega, T phi.alt(y_1) dots phi.alt (y_n) phi.alt(x_1) dots phi.alt (x_r), Omega)
+  [S^(mu nu), S^(rho sigma)] &= -1/2 (-2 i S^(mu sigma)+eta^(mu sigma)) eta^(nu rho) +1/2 (-2 i S^(nu sigma) + eta^(nu sigma)) eta^(rho mu) \ &#h(1em)- 1/2 (-2 i S^(rho mu) + eta^(rho mu)) eta^(nu sigma) + 1/2 (-2i S^(rho nu) + eta^(rho nu)) eta^(sigma mu) \
+  &= i (eta^(nu rho) S^(mu sigma) - eta^(mu rho) S^(nu sigma) - eta^(nu sigma) S^(mu rho) + eta^(mu sigma) S^(nu rho))
 $
-this reduces computing the $S$-matrix to computing time-ordered correlation functions.
+which is the Lorentz algebra.
+
+Now we just need the field that $tensor((S^(mu nu)), alpha, -beta)$ acts on. We introduce the Dirac _spinor_ $psi^alpha (x)$, an object with four complex components denoted by $alpha = 1,dots 4$. Under Lorentz transformations we then have
+$
+  psi^alpha (x) -> tensor(S[Lambda], alpha, -beta) psi^beta (Lambda^(-1) psi)
+$
+with
+$
+     Lambda & = exp(-i/2 omega_(rho sigma) J^(rho sigma)) \
+  S[Lambda] & = exp(-i/2 omega_(rho sigma) S^(rho sigma))equiv Lambda_(1\/2)
+$
+note we use the same $omega_(rho sigma)$ to specify the specific transformation.
+
+We quickly show
+$
+  S[Lambda]^(-1) gamma^mu S[Lambda] & = tensor(Lambda, mu, -nu) gamma^nu
+$
+the LHS is
+$
+  S[Lambda]^(-1) gamma^mu S[Lambda] & = (1+i/2 omega_(rho sigma) S^(rho sigma) ) gamma^mu (1-i/2 omega_(rho sigma) S^(rho sigma)) \
+  &= gamma^mu + i/2 omega_(rho sigma) S^(rho sigma) gamma^mu - i/2 omega_(rho sigma) gamma^mu S^(rho sigma) + dots \
+  &= gamma^mu + i/2 omega_(rho sigma) [S^(rho sigma), gamma^mu]
+$
+and the RHS is
+$
+  gamma^mu-i/2 omega_(rho sigma) J^(rho sigma) gamma^mu + dots
+$
+so we must have
+$
+  [S^(rho sigma), gamma^mu] = - J^(rho sigma) gamma^mu
+$
+this is exactly what we showed previously.
+
+== The Dirac equation
+We want to find an invariant equation of motion for the Dirac spinor $psi$. We do this by constructing an invariant action. We define the adjoint $psi^dagger (x) = (psi^*)^TT (x)$. Under a Lorentz transformation
+$
+          psi(x) & -> S[Lambda] psi(Lambda^(-1) x) \
+  psi^dagger (x) & -> psi^dagger (Lambda^(-1) x) S[Lambda]^dagger
+$
+in the Dirac representation we also have $(gamma^0)^dagger = gamma^0$ and $(gamma^i)^dagger = - gamma^i$. Then
+$
+  gamma^0 gamma^mu gamma^0 = (gamma^mu)^dagger
+$
+since $gamma^i gamma^0 = - gamma^0 gamma^i$. This means
+$
+  (S^(mu nu))^dagger & = -i/4 [(gamma^nu)^dagger, (gamma^mu)^dagger] \
+                     & = -i/4 gamma^0 [gamma^nu,gamma^mu] gamma^0 \
+                     & = -gamma^0 S^(mu nu) gamma^0
+$
+so
+$
+  S[Lambda]^dagger = exp(i/2 omega_(rho sigma) (S^(rho sigma))^dagger) = gamma^0 S[Lambda]^(-1) gamma^0
+$
+to apply this we define the Dirac adjoint
+$
+  overline(psi) = psi^dagger gamma^0
+$
+Then $overline(psi) psi$ is a scalar since
+$
+  overline(psi) (x) psi (x) &= psi^dagger (x) gamma^0 psi (x) \
+  &-> psi^dagger (Lambda^(-1) x) S[Lambda]^dagger gamma^0 S[Lambda] psi(Lambda^(-1) x) \
+  &= psi^dagger (Lambda^(-1) x) gamma^0 psi(Lambda^(-1) x) \
+  &= overline(psi) (Lambda^(-1)x) psi(Lambda^(-1) x)
+$
+And $overline(psi) gamma^mu psi$ is a vector since
+$
+  overline(psi) (x) gamma^mu psi(x) &= psi^dagger (x) gamma^0 gamma^mu psi(x) \
+  &-> psi^dagger (Lambda^(-1) x) S[Lambda]^dagger gamma^0 gamma^mu S[Lambda] psi(Lambda^(-1) x)\
+  &= psi^dagger (Lambda^(-1) x) gamma^0 S[Lambda]^(-1) gamma^mu S[Lambda] psi(Lambda^(-1) x) \
+  &= tensor(Lambda, mu, -nu) overline(psi) (Lambda^(-1) x) gamma^nu psi(Lambda^(-1) x)
+$
+using these we can construct the non-trivial Dirac action
+$
+  S = integral dd(x, 4) overline(psi) (i gamma^mu partial_mu - m) psi
+$
+with
+$
+  cal(L)_"Dirac" = overline(psi) (i gamma^mu partial_mu - m) psi
+$
+being the Dirac Lagrangian. Varying the action with respect to $overline(psi)$ gives the Dirac equation
+$
+  (i gamma^mu partial_mu - m) psi = 0
+$
+this is nice! And this guy implies the Klein-Gordon equation
+$
+  0 & = (i gamma^nu partial_nu + m)(i gamma^mu partial_mu -m) psi \
+    & = - (gamma^mu gamma^nu partial_mu partial_nu + m^2) psi \
+    & = -(partial_mu partial_mu + m^2) psi
+$
+this hints at the meaning of $m$ and justifies the inclusion of $i$.
+
+#let feyn(body) = math.cancel(angle: 15deg, body)
+
+As a point of notation one usually writes
+$
+  A_mu gamma^mu = feyn(A)
+$
+so the Dirac equation is written as
+$
+  (i feyn(partial) - m) psi = 0
+$
+
+== Weyl spinors
+With our representation we can write
+$
+  S^(0 i) = - i/2 mat(sigma^i, 0; 0, -sigma^i)";  " S^(i j) = 1/2 epsilon^(i j k) mat(sigma^k, 0; 0, sigma^k)
+$
+these generate boosts and rotations.
+
+The rotation matrix becomes (with $omega_(i j) = - epsilon_(i j k) phi^k$)
+$
+  S[Lambda] &= exp[i/4 phi^k underbracket(epsilon_(i j k) epsilon^(i j m), 2 tensor(delta, -k, m)) mat(sigma^m, 0; 0, sigma^m)] \
+  &= mat(exp(i bold(phi) dot bold(sigma)\/2), 0; 0, exp(i bold(phi) dot bold(sigma)\/2))
+$
+As an example consider a rotation by $2 pi$ about the $x^3$-axis. Then $bold(phi) = vecrow(0, 0, 2 pi)$ giving
+$
+  S[Lambda_"rotation"] = mat(exp(i pi sigma^3), 0; 0, exp(i pi sigma^3)) = - 1
+$
+meaning $psi^alpha -> - psi^alpha$!
+
+The boost matrix becomes (with $omega_(i 0) = - omega_(0 i) = chi_i$)
+$
+  S[Lambda_"boost"] &= exp[-i/2 (omega_(0 i) S^(0 i) + omega_(i 0) S^(i 0))] = exp[i chi_i S^(0 i)] \
+  &= mat(exp(bold(chi) dot bold(sigma)\/2), 0; 0, exp(- bold(chi) dot bold(sigma)\/2))
+$
+both are block diagonal meaning the Dirac spinor representation of the Lorentz group is _reducible_. We decompose it into two irreducible representations acting on $u_plus.minus$ defined by
+$
+  psi = vec(u_+, u_-)
+$
+the two-component objects $u_plus.minus$ are called _Weyl spinors_. They transform similarly under rotations
+$
+  u_plus.minus -> exp(i bold(phi) dot bold(sigma)\/2) u_plus.minus
+$
+but oppositely under boosts
+$
+  u_plus.minus -> exp(plus.minus bold(chi) dot bold(sigma)\/2) u_plus.minus
+$
+We can write the Lagrangian in terms of these
+$
+  cal(L) &= overline(psi) (i feyn(partial) - m) psi \
+  &= i u_-^dagger sigma^mu partial_mu u_- + i u^dagger_+ overline(sigma)^mu partial_mu u_+ - m (u_+^dagger u_- + u_-^dagger u_+)
+$
+where we define
+$
+  sigma^mu equiv vecrow(1, sigma^i)";  " overline(sigma)^mu equiv vecrow(1, -sigma^i)
+$
+then
+$
+  gamma^mu = mat(0, sigma^mu; overline(sigma)^mu, 0)
+$
+We see that for $m eq.not 0$ the $u_plus.minus$ couple which makes everything more complicated. For a massless fermion $m = 0$ we find
+$
+  i overline(sigma)^mu partial_mu u_+ & = 0 \
+            i sigma^mu partial_mu u_- & = 0
+$
+these are the _Weyl equations_.
+
+== Dirac field bilinears
+We introduce a fifth gamma matrix
+$
+  gamma^5 &equiv - i gamma^0 gamma^1 gamma^2 gamma^3 \
+  &= - i/4! epsilon^(mu nu rho sigma) gamma_mu gamma_nu gamma_rho gamma_sigma
+$
+$gamma^5$ has the following properties
+$
+  (gamma^5)^dagger & = gamma^5";  " (gamma^5)^2 & = 1";  " {gamma^5,gamma^mu} &= 0
+$
+implying $[gamma^5, S^(mu nu)] = 0$.
+
+We can construct projection operators
+$
+  P_plus.minus = 1/2 (1 plus.minus gamma^5)
+$
+with $P_plus.minus^2 = P_plus.minus$ and $P_+ P_- = 0$. With the Dirac representation
+$
+  gamma^5 = mat(1, 0; 0, -1)
+$
+meaning $P_plus.minus$ project onto the Weyl spinors $u_plus.minus$. This also shows the Dirac representation is reducible. We can then define $ psi_plus.minus = P_plus.minus psi $ which form the irreducible representations of the Lorentz group.
+
+We have seen that $overline(psi) psi$ is a scalar and that $overline(psi) gamma^mu psi$ is a vector. We can similarly construct the anti-symmetric tensor $ gamma^(mu nu) = 1/2 [gamma^mu,gamma^nu] equiv - i sigma^(mu nu) $
+which transforms as
+$
+  overline(psi) gamma^(mu nu) psi &-> (overline(psi) Lambda_(1\/2)^(-1)) (1/2 [gamma^mu, gamma^mu]) (Lambda_(1\/2) psi) \
+  & = 1/2 overline(psi) (Lambda_(1\/2)^(-1) gamma^mu Lambda_(1\/2) Lambda_(1\/2)^(-1) gamma^(nu) Lambda_(1\/2) - [mu <--> nu]) psi \
+  & = tensor(Lambda, mu, -alpha) tensor(Lambda, nu, -beta) overline(psi) gamma^(alpha beta) psi
+$
+as claimed.
+
+With $gamma^5$ we can construct the pseudo-vector $overline(psi) gamma^mu gamma^5 psi$ and pseudo-scalar $overline(psi) gamma^5 psi$ with _pseudo_ referring to how they transform under parity. We will see this later. We could now extend $cal(L)$ by the addition of new terms combining the above.
+
+Using the bilinears we can construct the currents
+$
+  j^mu = overline(psi) gamma^mu psi";  " j^(mu 5) = overline(psi) gamma^mu gamma^5 psi
+$
+Consider $j^mu$
+$
+  partial_mu j^mu &= (partial_mu overline(psi)) gamma^mu psi + overline(psi) gamma^mu partial_mu psi = i m overline(psi) psi - overline(psi) i m psi \
+  &= 0
+$
+where we use
+$
+  (i partial_mu gamma^mu - m) psi = 0";  " overline(psi) (i arrow.l(partial)_mu gamma^mu + m) = 0
+$
+so $j^mu$ is conserved! This is expected since it is the Noether current corresponding to the $"U"(1)$ symmetry of $cal(L)$. Consider
+$
+  psi -> e^(i alpha) psi
+$
+for an infinitesimal transformation
+$
+  psi -> psi underbracket(+ i alpha psi, dd(psi, d: delta))";  " overline(psi) -> overline(psi) underbracket(- i alpha overline(psi), dd(overline(psi), d: delta))
+$
+we find
+$
+  dd(cal(L), d: delta) &= dd(overline(psi), d: delta) ( i gamma^mu partial_mu -m) psi + overline(psi) (i gamma^mu partial_mu - m) dd(psi, d: delta) \
+  &= - partial_mu alpha underbracket(overline(psi) gamma^mu psi, j^mu)
+$
+then
+$
+  dd(S, d: delta) = - integral dd(x, 4) (partial_mu alpha) j^mu = integral dd(x, 4) alpha (partial_mu j^mu) + "boundary"
+$
+since $alpha$ is arbitrary we find $partial_mu j^mu = 0$ on shell!
+
+For $j^(mu 5)$ we find
+$
+  partial_mu j^(mu 5) = 2 i m overline(psi) gamma^5 psi
+$
+so for $m = 0$ it is conserved! This is the Noether current corresponding to the _chiral symmetry_ $psi -> e^(i alpha gamma^5) psi$.
+
+For spacetime translations we consider the canonical energy-momentum tensor. Since $cal(L)$ only depends on $partial_mu psi$ we find
+$
+  tensor(T, mu, -nu) &= pdv(cal(L), (partial_mu psi)) partial_nu psi - cal(L) tensor(delta, mu, -nu) \
+  &= i overline(psi) gamma^mu partial_nu psi - cal(L) tensor(delta, mu, -nu) =^"on shell" i overline(psi) gamma^mu partial_nu psi
+$
+which is nice and simple.
+
+== Plane wave solutions
+We seek solutions to the Dirac equation
+$
+  (i feyn(partial)-m) psi = 0
+$
+we make the ansatz
+$
+  psi = u(bold(p)) e^(-i p dot x) #h(2em) ("positive frequency")
+$
+then the Dirac equation becomes
+$
+  (gamma^mu p_mu - m) u (bold(p)) = mat(-m, p_mu sigma^mu; p_mu overline(sigma)^mu, -m) u(bold(p)) = 0
+$
+We claim the solution is
+$
+  u(bold(p)) = vec(sqrt(p dot sigma) xi, sqrt(p dot overline(sigma)) xi)
+$
+for any two-component spinor $xi$ normalized to $xi^dagger xi = 1$. We find later that $xi$ determine the spin. To see this let $u^TT = vecrow(u_1, u_2)$ then the Dirac equation says
+$
+  (p dot sigma) u_2 = m u_1 " and " (p dot overline(sigma)) u_1 = m u_2
+$
+note that these imply eachother since $(p dot sigma) (p dot overline(sigma)) = p_mu p^mu = m^2$. We try $u_1 = (p dot sigma) xi'$ for some spinor $xi'$. Then
+$
+  u (bold(p)) = A vec((p dot sigma) xi', m xi')
+$
+with $A$ being some constant. We pick $A = m^(-1)$ and $xi' = sqrt(p dot overline(sigma)) xi$. Then $u_1 = m sqrt(p dot sigma) xi$ and we are done.
+
+We find other solutions using the ansatz
+$
+  psi = v (bold(p)) e^(i p dot x) #h(2em) ("negative frequency")
+$
+The Dirac equation becomes
+$
+  (gamma^mu p_mu + m) v (bold(p)) = mat(m, p_mu sigma^mu; p_mu overline(sigma)^mu, m) v(bold(p)) = 0
+$
+with solution
+$
+  v(bold(p)) = vec(sqrt(p dot sigma) eta, - sqrt(p dot overline(sigma)) eta)
+$
+for any two-component spinor $eta$ normalized to $eta^dagger eta = 1$.
+
+We introduce a basis $xi^s$ and $eta^s$ with $s = 1, 2$ such that
+$
+  xi^(r dagger) xi^s = delta^(r s) " and " eta^(r dagger) eta^s = delta^(r s)
+$
+Then we can write the positive frequency solutions as
+$
+  u^s (bold(p)) = vec(sqrt(p dot sigma) xi^s, sqrt(p dot overline(sigma)) xi^s)
+$
+We now compute some identities we will need
+$
+  u^(r dagger) (bold(p)) dot u^s (bold(p)) &= vecrow(xi^(r dagger) sqrt(p dot sigma), xi^(r dagger) sqrt(p dot overline(sigma))) vec(sqrt(p dot sigma) xi^s, sqrt(p dot overline(sigma))xi^s) \
+  &= xi^(r dagger) p dot sigma xi^s + xi^(r dagger) p dot overline(sigma) xi^s = 2 E_bold(p) delta^(r s)
+$
+similarly
+$
+  overline(u)^r (bold(p)) dot u^s (bold(p)) = 2 m delta^(r s)
+$
+Analogously we can write the negative frequency solutions as
+$
+  v^s (bold(p)) = vec(sqrt(p dot sigma) eta^s, - sqrt(p dot overline(sigma)) eta^s)
+$
+where we have
+$
+   v^(r dagger) (bold(p)) dot v^s (bold(p)) & = 2 E_bold(p) delta^(r s) \
+  overline(v)^r (bold(p)) dot v^s (bold(p)) & = -2m delta^(r s)
+$
+We can also try to mix $u^s (bold(p))$ and $v^s (bold(p))$. We can find
+$
+   overline(u)^r (bold(p)) dot v^s (bold(p)) & = 0 \
+   overline(v)^r (bold(p)) dot u^s (bold(p)) & = 0 \
+  u^(r dagger) (bold(p)) dot v^s (- bold(p)) & = 0 \
+   v^(r dagger) (bold(p)) dot u^s (-bold(p)) & = 0
+$
+We also have the completion relations
+$
+  sum_s u^s (bold(p)) overline(u)^s (bold(p)) & = feyn(p) + m \
+  sum_s v^s (bold(p)) overline(v)^s (bold(p)) & = feyn(p) - m
+$
+these follow immediately from $sum_s xi^s xi^(s dagger) = bb(1)$ and $sum_s eta^s eta^(s dagger) = bb(1)$.
+
+== Quantizing the Dirac field
+We start with the Lagrangian
+$
+  cal(L) = overline(psi) (i feyn(partial) - m) psi
+$
+we find the canonical momentum conjugate to $psi$ by
+$
+  pi = pdv(cal(L), dot(psi)) = i overline(psi) gamma^0 = i psi^dagger
+$
+The Hamiltonian is then
+$
+  cal(H) = pi dot(psi) - cal(L) = overline(psi) (-i gamma^i partial_i + m) psi
+$
+We try to quantize $psi$ by imposing
+$
+  [psi_alpha (bold(x)), psi_beta^dagger (bold(y))] = delta^((3)) (bold(x)-bold(y)) delta_(alpha beta)
+$
+this leads to multiple problems. We expand $psi$ as
+$
+  psi (bold(x)) = sum_s integral dd(p, 3)/(2 pi)^3 1/sqrt(2 E_bold(p)) [a_bold(p)^s u^s (bold(p)) e^(i bold(p) dot bold(x)) + b_bold(p)^(s) v^s (bold(p)) e^(-i bold(p) dot bold(x))]
+$
+and claim the commutation relations
+$
+  [a_bold(p)^r, a_(bold(q))^(s dagger)] = [b_bold(p)^r, b_bold(q)^(s dagger)] = (2 pi)^3 delta^((3)) (bold(p)-bold(q)) delta^(r s)
+$
+imply the imposed ones.
+
+#proof[see any book.]
+
+Then we can write the Hamiltonian in terms of $a$ and $b$ by
+$
+  H = integral dd(p, 3)/(2 pi)^3 sum_s (E_bold(p) a_bold(p)^(s dagger) a_bold(p)^s - E_bold(p) b_bold(p)^(s dagger) b_bold(p)^s)
+$
+this is problematic. Consider
+$
+  [H, b_bold(p)^(s dagger)] &= integral dd(q, 3)/(2 pi)^3 sum_s E_bold(q) [b_bold(p)^(s dagger), b_bold(q)^(r dagger) b_(bold(q))^r] = integral dd(q, 3)/(2 pi)^3 sum_s E_bold(q) b_bold(q)^(r dagger) [b_bold(p)^(s dagger), b_bold(q)^r] \
+  &=- integral dd(q, 3)/(2pi)^3 sum_s E_bold(q) b_(bold(q))^(r dagger) (2 pi)^3 delta^((3)) (bold(q)-bold(p)) delta^(r s) = - E_bold(p) b_bold(p)^(s dagger)
+$
+so creating particles with $b^dagger$ can lower the energy forever.
+
+The solution to this problem is imposing the anticommutation relations
+$
+  {psi_a (bold(x)), psi_b^dagger (bold(y))} &= delta^((3)) (bold(x)-bold(y)) delta_(a b) \
+  {psi_a (bold(x)), psi_b (bold(y))} &= {psi_a^dagger (bold(x)), psi_b^dagger (bold(y))} = 0
+$
+Then the creation and annihilation operators must satisfy
+$
+  {a_bold(p)^r, a_bold(q)^(s dagger)} = {b_bold(p)^r, b_bold(q)^(s dagger)} = (2 pi)^3 delta^((3)) (bold(p)-bold(q)) delta^(r s)
+$
+and one finds the same Hamiltonian
+$
+  H = integral dd(p, 3)/(2 pi)^3 sum_s (E_bold(p) a_bold(p)^(s dagger) a_bold(p)^s - E_bold(p) b_bold(p)^(s dagger) b_bold(p)^s)
+$
+but we can now avoid the negative energies by redefining $b <--> b^dagger$. Then
+$
+  -E_bold(p) b_bold(p)^(s dagger) b_bold(p)^s -> + E_bold(p) b_bold(p)^(s dagger) b_bold(p)^s - "const"
+$
+and since the anticommutation relation is symmetric it does not change. So we find
+$
+  H = integral dd(p, 3)/(2 pi)^3 sum_s (E_bold(p) a_bold(p)^(s dagger) a_bold(p)^s + E_bold(p) b_bold(p)^(s dagger) b_bold(p)^s - (2 pi)^3 delta^((3)) (0))
+$
+with the field expanded as
+$
+  psi (bold(x)) = sum_s integral dd(p, 3)/(2 pi)^3 1/sqrt(2 E_bold(p)) [a_bold(p)^s u^s (bold(p)) e^(i bold(p) dot bold(x)) + b_bold(p)^(s dagger) v^s (bold(p)) e^(-i bold(p) dot bold(x))]
+$
+We define vacuum by $a_bold(p)^s ket(0) = b_bold(p)^s ket(0) = 0$ and as before $a_bold(p)^(s dagger)$ and $b_bold(p)^(s dagger)$ create particles. Consider a two-particle state $a_bold(p)^dagger a_bold(q)^dagger ket(0)$. We have
+$
+  a_bold(p)^dagger a_bold(q)^dagger ket(0) = - a_bold(q)^dagger a_bold(p)^dagger ket(0) =^(bold(p)=bold(q)) 0
+$
+so the state is anti-symmetric under exchange and multiple particles can not exist in the same mode! We conclude that if the ladder operators obey anticommutation relations then they obey Fermi-Dirac statistic. As opposed to the scalar field where they obey Bose-Einstein statistics.
+
+Before proceeding we switch to the Heisenberg picture. This is done using
+$
+  e^(i H t) a_bold(p)^s e^(-i H t) = a_bold(p)^s e^(-i E_bold(p) t)";  " e^(i H t) b_bold(p)^s e^(-i H t) = b_bold(p)^s e^(i E_bold(p) t)
+$
+which gives
+$
+  psi(x) &= integral dd(p, 3)/(2 pi)^3 1/sqrt(2 E_bold(p)) sum_s (a_bold(p)^s u^s (p) e^(-i p dot x) + b_bold(p)^(s dagger) v^s (p) e^(i p dot x)) \
+  overline(psi)(x) &= integral dd(p, 3)/(2 pi)^3 1/sqrt(2 E_bold(p)) sum_s (b_bold(p)^s overline(v)^s (p) e^(-i p dot x) + a_bold(p)^(s dagger) overline(u)^s (p) e^(i p dot x))
+$
+we write the Hamiltonian and momentum operators as
+$
+  H &= integral dd(p, 3)/(2 pi)^3 sum_s E_bold(p) (a_bold(p)^(s dagger) a_bold(p)^s + b_bold(p)^(s dagger) b_bold(p)^s) \
+  bold(P) &= integral dd(x, 3) psi^dagger (-i grad) psi = integral dd(p, 3)/(2 pi)^3 sum_s bold(p) (a_bold(p)^(s dagger) a_bold(p)^s + b_bold(p)^(s dagger) b_bold(p)^s)
+$
+Then both $a_bold(p)^(s dagger)$ and $b_bold(p)^(s dagger)$ create particles with energy $E_bold(p)$ and momentum $bold(p)$. We refer to particles created by $a_bold(p)^(s dagger)$ as fermions and particles created by $b_bold(p)^(s dagger)$ as antifermions.
+
+== Spin and charge
+We want to find the spin of a Dirac particle. We consider a rotation under which $psi$ transforms as
+$
+  psi (x) -> Lambda_(1\/2) psi(Lambda^(-1) x)
+$
+we want to use Noether's theorem so we need $dd(psi, d: delta)$
+$
+  dd(psi, d: delta) = Lambda_(1\/2) psi (Lambda^(-1) x) - psi(x)
+$
+by $omega_12 = - omega_21 = theta$ we find
+$
+  Lambda_(1\/2) tilde.eq 1 - i/2 omega_(mu nu) S^(mu nu) = 1 - i/2 theta mat(sigma^3, 0; 0, sigma^3) equiv 1 - i/2 theta Sigma^3
+$
+so
+$
+  dd(psi, d: delta) &= (1 - i/2 theta Sigma^3) psi(t, x+theta y, y-theta x, z) - psi(x) \
+  &= -theta (x partial_y - y partial_x + i/2 Sigma^3) psi (x) equiv theta Delta psi
+$
+then
+$
+  j^0 = pdv(cal(L), (partial_0 psi)) Delta psi = - i overline(psi) gamma^0 (x partial_y - y partial_x + i/2 Sigma^3) psi
+$
+similarly for rotations about $x$ and $y$ so we find
+$
+  bold(J) = integral dd(x, 3) psi^dagger (bold(x) times (-i grad) + underbracket(1/2 bold(Sigma), tilde "spin")) psi
+$
+the second term is related to the spin angular momentum for non-relativistic fermions. For relativistic fermions it is more complicated, luckily we only need to consider fermions at rest. We apply $J-z$ to $a_0^(s dagger) ket(0)$. Since $J_z ket(0)$ we can find $[J_z,a_0^(s dagger)] ket(0)$. This commutator is non-vanishing for terms in $J_z$ that have annihilations operators at $bold(p) = 0$. The orbital part of $J_z$ vanishes for these. We can then expand the spin part as
+$
+  J_z &= integral dd(x, 3) integral dd(p, p', 3)/(2pi)^6 1/sqrt(2 E_bold(p) 2 E_bold(p)') e^(-i bold(p)'dot bold(x)) e^(i bold(p) dot bold(x)) \
+  &times sum_(r') [a_bold(p)'^(r' dagger) u^(r' dagger) (bold(p)') + b_(-bold(p)')^(r') v^(r' dagger) (- bold(p)')] Sigma^3/2 sum_r [a_bold(p)^r u^r (bold(p)) + b_(-bold(p))^(r dagger) v^r (-bold(p))]
+$
+the only surviving term when taking the commutator has the form
+$
+  [a_bold(p)^(r dagger) a_bold(p)^r, a_0^(s dagger)] = (2pi)^3 delta^((3)) (bold(p)) a_0^(r dagger) delta^(r s)
+$
+others vanish or kill vacuum. We find
+$
+  J_z a_0^(s dagger) ket(0) &= 1/(2 m) sum_r [u^(s dagger) (0) Sigma^3/2 u^r (0)] a_0^(r dagger) ket(0) \
+  &= sum_r (xi^(s dagger) sigma^3/2 xi^r) a_0^(r dagger) ket(0)
+$
+taking $xi^(s TT) = vecrow(1, 0)$ we find the eigenvalue $+ 1/2$ and taking $xi^(s TT) = vecrow(0, 1)$ we find $- 1/2$. Doing a similar computation for an antifermion state yields an extra $-$ sign meaning the spins reverse.
+
+We conclude
+$
+  J_z a_0^(s dagger) ket(0) = plus.minus 1/2 a_0^(s dagger) ket(0)";  " J_z b_0^(s dagger) ket(0) = minus.plus b_0^(s dagger) ket(0)
+$
+for $xi^(s TT) = vecrow(1, 0)$ and $xi^(s TT) = vecrow(0, 1)$ respectively.
+
+Recall the conserved current
+$
+  j^mu = overline(psi) gamma^mu psi
+$
+the corresponding charge is
+$
+  Q &= integral dd(x, 3) psi^dagger psi \
+  &= integral dd(p, 3)/(2 pi)^3 sum_s (a_bold(p)^(s dagger) a_bold(p)^s - b_bold(p)^(s dagger) b_bold(p)^s + "const")
+$
+so fermions have charge $+1$ while antifermions have charge $-1$.
+
+== Propagators
+We define the _fermionic propagator_
+$
+  S_(alpha beta) &= {psi_alpha (x), overline(psi)_beta (y)} equiv S(x-y) \
+  &= integral dd(p, q, 3)/(2pi)^6 1/sqrt(4 E_bold(p) E_bold(q)) [{a_bold(p)^s, a_bold(q)^(r dagger)} u^s (p) overline(u)^r (q) e^(-i (p dot x-q dot y)) \ &#h(12em)+ {b_bold(p)^(s dagger), b_bold(q)^r} v^s (p) overline(v)^r (q) e^(i (p dot x - q dot y))] \
+  &= integral dd(p, 3)/(2pi)^3 1/(2 E_bold(p)) [u^s (p) overline(u)^s (p) e^(- i p dot (x-y)) + v^s (p) overline(v)^r (p) e^(i p dot (x-y)) ] \
+  &= integral dd(p, 3)/(2pi)^3 1/(2 E_bold(p)) [(feyn(p)+m) e^(-i p dot (x-y)) + (feyn(p)-m) e^(i p dot (x-y))] \
+  &= (i feyn(partial)_x + m) integral dd(p, 3)/(2 pi)^3 1/(2 E_bold(p)) (e^(-i p dot (x-y))- e^(i p dot (x-y))) \
+  &= (i feyn(partial)_x + m) [phi.alt (x), phi.alt (y)]
+$
+where
+$
+  [phi.alt(x), phi.alt(y)] = D(x-y) - D(y-x)
+$
+Similarly we can find
+$
+  braket(0, psi_alpha (x) overline(psi)_beta (y), 0) &= (i feyn(partial)_x + m)_(alpha beta) integral dd(p, 3)/(2 pi)^3 1/(2 E_bold(p)) e^(-i p dot (x-y)) \
+  braket(0, overline(psi)_beta (y) psi_alpha (x), 0) &= - (i feyn(partial)_x +m)_(alpha beta) integral dd(p, 3)/(2 pi)^3 1/(2 E_bold(p)) e^(-i p dot (y-x))
+$
+and define the Feynman propagator
+$
+  S_F (x-y) &equiv braket(0, T psi(x) overline(psi)(y), 0) \
+  &= cases(braket(0, psi(x) overline(psi)(y), 0) " for " x^0 > y^0, -braket(0, overline(psi)(y) psi(x), 0) " for " x^0 < y^0)
+$
+with the $-$ sign arising due to exchanging $psi$ and $overline(psi)$. We can write this as
+$
+  S_F (x-y) = integral dd(p, 4)/(2 pi)^4 (i (feyn(p) +m))/(p^2-m^2 + i epsilon) e^(-i p dot (x-y))
+$
+which is a Green's function of the Dirac equation
+$
+  (i feyn(partial)_x - m) S_F (x-y) = i delta^((4)) (x-y)
+$
