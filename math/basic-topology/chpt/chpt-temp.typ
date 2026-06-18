@@ -1,5 +1,6 @@
 #import "@preview/ctheorems:1.1.3": *
 #import "@preview/equate:0.3.2": equate
+#import "@preview/physica:0.9.8": *
 
 #let white = "#ffffff"
 #let black = "#000000"
@@ -117,3 +118,9 @@
   "Proof",
   padding: (top: 0.0em, bottom: 0.0em),
 )
+
+#let nte = thmplain(
+  "note",
+  "Note",
+  namefmt: emph,
+).with(numbering: none)

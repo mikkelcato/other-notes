@@ -2,6 +2,7 @@
 #import "@preview/physica:0.9.5": *
 #import "chpt-temp.typ": *
 #import "@preview/mannot:0.3.0": *
+#import "@preview/physica:0.9.8": *
 #import "@preview/cetz:0.4.1" // drawings
 
 #show: thmrules.with(qed-symbol: $square$)
