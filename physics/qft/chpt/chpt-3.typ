@@ -1,10 +1,7 @@
 //**** init-ting
-#import "@preview/physica:0.9.7": *
-#import "chpt-temp.typ": *
-#import "@preview/wicked:0.1.1": *
-
-#show: thmrules.with(qed-symbol: $square$)
+#import "../../../temp.typ": *
 #show: chpt-note.with()
+#import "@preview/wicked:0.1.1": *
 
 = The Dirac Field
 Now that we have looked at the simplest possible field theory we move on to the next simplest: the Dirac field.

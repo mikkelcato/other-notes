@@ -1,11 +1,7 @@
 //**** init-ting
-#import "@preview/physica:0.9.7": *
-#import "chpt-temp.typ": *
+#import "../../../temp.typ": *
 #import "@preview/wicked:0.1.1": *
-
-#show: thmrules.with(qed-symbol: $square$)
 #show: chpt-note.with()
-
 
 #let feyn(body) = math.cancel(angle: 15deg, body)
 
